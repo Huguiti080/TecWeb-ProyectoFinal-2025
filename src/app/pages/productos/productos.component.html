@@ -1,0 +1,29 @@
+<div class="container">
+ <div class="section-header">
+            <h1 class="section-title">Productos</h1>
+            <p class="section-subtitle">Descubre nuestra variedad de productos que tenemos para ti.</p>
+        </div>
+
+        <div class="search-bar">
+  <input type="text" [(ngModel)]="terminoBusqueda" placeholder="Buscar productos..." />
+  <button (click)="buscarProducto()">Buscar</button>
+</div>
+
+<!-- Mensaje si no se encontraron resultados -->
+<div *ngIf="productosFiltrados.length === 0 && busquedaRealizada" class="no-result">
+  Datos no encontrados
+</div>
+
+
+
+  <div class="product-grid">
+   <div *ngFor="let product of productosFiltrados" class="product-card">
+      <img [src]="product.image" [alt]="product.name" class="product-image">
+      <div class="product-info">
+        <h2>{{ product.name }}</h2>
+        <p class="description">{{ product.description }}</p>
+        <p class="price">{{ product.price | currency }}</p>
+      </div>
+    </div>
+  </div>
+</div>

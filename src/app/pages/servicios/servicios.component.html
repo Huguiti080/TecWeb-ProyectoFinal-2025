@@ -1,0 +1,109 @@
+<div class="fondo-con-imagen">
+  <div class="contenido-formulario">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="card bg-dark text-warning shadow-lg border-warning">
+            <div class="card-body">
+              <h3 class="card-title text-center mb-4">Regístrate al Gimnasio</h3>
+
+              <form [formGroup]="formulario" (ngSubmit)="guardar()">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre:</label>
+                  <input
+                    id="nombre"
+                    type="text"
+                    class="form-control bg-dark text-warning border-warning"
+                    formControlName="nombre"
+                    placeholder="Tu nombre completo"
+                  />
+                  @if (mostrarError('nombre')) {
+                    <div class="form-text text-danger">
+                      @if (formulario.get('nombre')?.errors?.['required']) {
+                        <small>El nombre es obligatorio.</small>
+                      }
+                      @if (formulario.get('nombre')?.errors?.['minlength']) {
+                        <small>Debe tener al menos 3 caracteres.</small>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label for="correo" class="form-label">Correo:</label>
+                  <input
+                    id="correo"
+                    type="email"
+                    class="form-control bg-dark text-warning border-warning"
+                    formControlName="correo"
+                    placeholder="ejemplo@correo.com"
+                  />
+                  @if (mostrarError('correo')) {
+                    <div class="form-text text-danger">
+                      @if (formulario.get('correo')?.errors?.['required']) {
+                        <small>El correo es obligatorio.</small>
+                      }
+                      @if (formulario.get('correo')?.errors?.['email']) {
+                        <small>Debe ser un correo válido.</small>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label for="telefono" class="form-label">Teléfono:</label>
+                  <input
+                    id="telefono"
+                    type="text"
+                    class="form-control bg-dark text-warning border-warning"
+                    formControlName="telefono"
+                    placeholder="10 dígitos"
+                  />
+                  @if (mostrarError('telefono')) {
+                    <div class="form-text text-danger">
+                      @if (formulario.get('telefono')?.errors?.['required']) {
+                        <small>El teléfono es obligatorio.</small>
+                      }
+                      @if (formulario.get('telefono')?.errors?.['pattern']) {
+                        <small>Debe tener exactamente 10 dígitos.</small>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="mb-4">
+                  <label for="servicio" class="form-label">Servicio:</label>
+                  <select
+                    id="servicio"
+                    class="form-select bg-dark text-warning border-warning"
+                    formControlName="servicio"
+                  >
+                    <option value="" disabled selected>Selecciona un servicio</option>
+                    <option value="asesoria">Asesoría</option>
+                    <option value="entrenamiento">Entrenamiento</option>
+                    <option value="nutricion">Nutrición</option>
+                  </select>
+                  @if (mostrarError('servicio')) {
+                    <div class="form-text text-danger">
+                      @if (formulario.get('servicio')?.errors?.['required']) {
+                        <small>Debe seleccionar un servicio.</small>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn btn-warning w-100"
+                  [disabled]="formulario.invalid"
+                >
+                  Enviar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

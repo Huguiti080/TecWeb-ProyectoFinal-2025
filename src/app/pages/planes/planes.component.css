@@ -1,0 +1,317 @@
+/* Estilos base con fondo negro */
+.planes-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: #000000;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+
+/* Sección hero */
+.hero {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+  border-radius: 10px;
+  border: 1px solid #d4af37;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  color: #d4af37;
+  /* Dorado */
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #f5f5dc;
+  /* Beige */
+}
+
+/* Contenedor de planes */
+.plans-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+/* Tarjetas de plan */
+.plan-card {
+  position: relative;
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #333;
+  overflow: hidden;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+  border-color: #d4af37;
+}
+
+.plan-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.plan-header h3 {
+  font-size: 1.5rem;
+  color: #d4af37;
+  /* Dorado */
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #d4af37;
+  /* Dorado */
+}
+
+.price span {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #f5f5dc;
+  /* Beige */
+}
+
+/* Lista de características */
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.features li {
+  padding: 0.75rem 0;
+  display: flex;
+  align-items: center;
+  color: #f5f5dc;
+  /* Beige */
+}
+
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: #d4af37;
+  /* Dorado */
+  color: #000;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* Botones */
+.select-button {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.primary-button {
+  background: linear-gradient(to right, #d4af37, #f1c40f);
+  color: #000;
+}
+
+.primary-button:hover {
+  background: linear-gradient(to right, #f1c40f, #d4af37);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+.secondary-button {
+  background: #333;
+  color: #d4af37;
+  border: 1px solid #d4af37;
+}
+
+.secondary-button:hover {
+  background: #444;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* Badge recomendado */
+.recommended-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: #c0392b;
+  /* Rojo oscuro */
+  color: white;
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Sección FAQ */
+.faq-section {
+  margin-top: 4rem;
+  padding: 2rem;
+  background: #1a1a1a;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.faq-section h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #d4af37;
+  /* Dorado */
+}
+
+.faq-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-item h3 {
+  color: #c0392b;
+  /* Rojo */
+  margin-bottom: 0.5rem;
+}
+
+.faq-item p {
+  color: #f5f5dc;
+  /* Beige */
+}
+
+/* Efectos especiales */
+.plan-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #d4af37, #c0392b);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.plan-card:hover::before {
+  opacity: 1;
+}
+
+/* Estilos para la nueva sección de recursos */
+.resources-section {
+  margin-top: 4rem;
+  padding: 2rem;
+  background: #1a1a1a;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  color: #d4af37;
+  font-size: 1.8rem;
+}
+
+.section-subtitle {
+  color: #f0f0f0;
+}
+
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.resource-card {
+  background: #252525;
+  padding: 1.5rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-5px);
+  border: 1px solid #d4af37;
+}
+
+.resource-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #d4af37;
+}
+
+.resource-title {
+  color: #f0f0f0;
+  margin-bottom: 0.5rem;
+}
+
+.resource-description {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.class-cta {
+  display: inline-block;
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: bold;
+  border-bottom: 1px solid #d4af37;
+  padding-bottom: 0.2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .plans-container {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero {
+    padding: 2rem 1rem;
+  }
+}
+
+.video-container {
+  margin-top: 10px;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 16 / 9;
+  position: relative;
+}
+
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}

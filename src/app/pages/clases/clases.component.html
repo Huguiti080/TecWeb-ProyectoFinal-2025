@@ -1,0 +1,136 @@
+<div class="container">
+  <div class="section-header">
+    <h1 class="section-title">Nuestras Clases</h1>
+    <p class="section-subtitle">
+      Descubre nuestra variedad de clases diseñadas para todos los niveles. Unidos por la fuerza, imparables en el proceso.
+    </p>
+  </div>
+
+  <div class="filter-group">
+    <mat-button-toggle-group name="claseFiltro" aria-label="Filtro de clases" appearance="standard">
+      <mat-button-toggle value="todas">Todas</mat-button-toggle>
+      <mat-button-toggle value="zumba">Zumba</mat-button-toggle>
+      <mat-button-toggle value="yoga">Yoga</mat-button-toggle>
+      <mat-button-toggle value="crossfit">CrossFit</mat-button-toggle>
+      <mat-button-toggle value="spinning">Spinning</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="clases-grid">
+    <mat-card class="clase-card" appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="zumba-img"></div>
+        <mat-card-title>Zumba</mat-card-title>
+        <mat-card-subtitle>Cardio / Diversión</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image class="clase-imagen" src="assets/imagenes/zumba.jpg" alt="Zumba">
+      <mat-card-content class="clase-info">
+        <p class="descripcion">
+          Combina movimientos de baile con rutinas aeróbicas para una experiencia de fitness divertida y efectiva.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent">Ver horarios</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="clase-card" appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="yoga-img"></div>
+        <mat-card-title>Yoga</mat-card-title>
+        <mat-card-subtitle>Relajación / Flexibilidad</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image class="clase-imagen" src="assets/imagenes/yoga.jpg" alt="Yoga">
+      <mat-card-content class="clase-info">
+        <p class="descripcion">
+          Conecta cuerpo y mente a través de posturas, respiración y meditación para mejorar flexibilidad y reducir estrés.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent">Ver horarios</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="clase-card" appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="crossfit-img"></div>
+        <mat-card-title>CrossFit</mat-card-title>
+        <mat-card-subtitle>Alta Intensidad</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image class="clase-imagen" src="assets/imagenes/crossfit.jpg" alt="CrossFit">
+      <mat-card-content class="clase-info">
+        <p class="descripcion">
+          Entrenamiento funcional de alta intensidad que combina ejercicios cardiovasculares, gimnásticos y de levantamiento.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent">Ver horarios</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="clase-card" appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="spinning-img"></div>
+        <mat-card-title>Spinning</mat-card-title>
+        <mat-card-subtitle>Ciclismo Indoor</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image class="clase-imagen" src="assets/imagenes/spinning.jpg" alt="Spinning">
+      <mat-card-content class="clase-info">
+        <p class="descripcion">
+          Ciclismo indoor de alta energía con música motivadora y rutinas variadas para quemar calorías eficientemente.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent">Ver horarios</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <h2 class="schedule-title">Horario Semanal</h2>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 tabla-horarios">
+    <ng-container matColumnDef="hora">
+      <th mat-header-cell *matHeaderCellDef>Hora</th>
+      <td mat-cell *matCellDef="let row">{{row.hora}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="lunes">
+      <th mat-header-cell *matHeaderCellDef>Lunes</th>
+      <td mat-cell *matCellDef="let row">{{row.lunes}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="martes">
+      <th mat-header-cell *matHeaderCellDef>Martes</th>
+      <td mat-cell *matCellDef="let row">{{row.martes}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="miercoles">
+      <th mat-header-cell *matHeaderCellDef>Miércoles</th>
+      <td mat-cell *matCellDef="let row">{{row.miercoles}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="jueves">
+      <th mat-header-cell *matHeaderCellDef>Jueves</th>
+      <td mat-cell *matCellDef="let row">{{row.jueves}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="viernes">
+      <th mat-header-cell *matHeaderCellDef>Viernes</th>
+      <td mat-cell *matCellDef="let row">{{row.viernes}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="sabado">
+      <th mat-header-cell *matHeaderCellDef>Sábado</th>
+      <td mat-cell *matCellDef="let row">{{row.sabado}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="domingo">
+      <th mat-header-cell *matHeaderCellDef>Domingo</th>
+      <td mat-cell *matCellDef="let row">{{row.domingo}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <button mat-flat-button color="primary" (click)="abrirSnackBar()">¡Más info!</button>
+</div>

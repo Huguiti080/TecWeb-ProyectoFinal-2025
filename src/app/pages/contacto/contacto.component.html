@@ -1,0 +1,185 @@
+<div class="fondo-con-imagen">
+  <div class="contenido-formulario">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="card bg-dark text-warning shadow-lg border-warning">
+            <div class="card-body">
+              <h3 class="card-title text-center mb-4">Contáctanos</h3>
+
+              <form #formulario="ngForm" (ngSubmit)="enviarFormulario(formulario)">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre:</label>
+                  <input id="nombre" name="nombre" type="text" class="form-control bg-dark text-warning border-warning"
+                    [(ngModel)]="contacto.nombre" required minlength="3" #nombre="ngModel"
+                    placeholder="Tu nombre completo" />
+                  @if (nombre.invalid && nombre.touched) {
+                  <div class="form-text text-danger">
+                    @if (nombre.errors?.['required']) {
+                    <small>El nombre es obligatorio.</small>
+                    }
+                    @if (nombre.errors?.['minlength']) {
+                    <small>Debe tener al menos 3 caracteres.</small>
+                    }
+                  </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label for="correo" class="form-label">Correo:</label>
+                  <input id="correo" name="correo" type="email" class="form-control bg-dark text-warning border-warning"
+                    [(ngModel)]="contacto.correo" required email #correo="ngModel" placeholder="ejemplo@correo.com" />
+                  @if (correo.invalid && correo.touched) {
+                  <div class="form-text text-danger">
+                    @if (correo.errors?.['required']) {
+                    <small>El correo es obligatorio.</small>
+                    }
+                    @if (correo.errors?.['email']) {
+                    <small>Debe ser un correo válido.</small>
+                    }
+                  </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label for="asunto" class="form-label">Asunto:</label>
+                  <input id="asunto" name="asunto" type="text" class="form-control bg-dark text-warning border-warning"
+                    [(ngModel)]="contacto.asunto" required minlength="5" #asunto="ngModel"
+                    placeholder="Motivo del mensaje" />
+                  @if (asunto.invalid && asunto.touched) {
+                  <div class="form-text text-danger">
+                    @if (asunto.errors?.['required']) {
+                    <small>El asunto es obligatorio.</small>
+                    }
+                    @if (asunto.errors?.['minlength']) {
+                    <small>Debe tener al menos 5 caracteres.</small>
+                    }
+                  </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label for="motivo" class="form-label">Motivo de contacto:</label>
+                  <select id="motivo" name="motivo" class="form-control bg-dark text-warning border-warning"
+                    [(ngModel)]="contacto.motivo" required #motivo="ngModel">
+                    <option value="" disabled selected>Selecciona un motivo</option>
+                    @for (m of motivos; track m) {
+                    <option [value]="m">{{ m }}</option>
+                    }
+                  </select>
+                  @if (motivo.invalid && motivo.touched) {
+                  <div class="form-text text-danger">
+                    <small>Debes seleccionar un motivo.</small>
+                  </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Urgencia del mensaje:</label>
+                  <div class="urgencia-radios">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" id="urgencia-baja" name="urgencia"
+                        [(ngModel)]="contacto.urgencia" value="Baja" required #urgencia="ngModel" />
+                      <label class="form-check-label" for="urgencia-baja">Baja</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" id="urgencia-normal" name="urgencia"
+                        [(ngModel)]="contacto.urgencia" value="Normal" required />
+                      <label class="form-check-label" for="urgencia-normal">Normal</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" id="urgencia-alta" name="urgencia"
+                        [(ngModel)]="contacto.urgencia" value="Urgente" required />
+                      <label class="form-check-label" for="urgencia-alta">Urgente</label>
+                    </div>
+                  </div>
+                  @if (urgencia.invalid && urgencia.touched) {
+                  <div class="form-text text-danger">
+                    <small>Debes seleccionar el nivel de urgencia.</small>
+                  </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label for="mensaje" class="form-label">Mensaje:</label>
+                  <textarea id="mensaje" name="mensaje" class="form-control bg-dark text-warning border-warning"
+                    [(ngModel)]="contacto.mensaje" required minlength="10" #mensaje="ngModel"
+                    placeholder="Escribe tu mensaje..." rows="4"></textarea>
+                  @if (mensaje.invalid && mensaje.touched) {
+                  <div class="form-text text-danger">
+                    @if (mensaje.errors?.['required']) {
+                    <small>El mensaje es obligatorio.</small>
+                    }
+                    @if (mensaje.errors?.['minlength']) {
+                    <small>Debe tener al menos 10 caracteres.</small>
+                    }
+                  </div>
+                  }
+                </div>
+
+                <div class="mb-3">
+                  <label for="fecha" class="form-label">Fecha de contacto:</label>
+                  <input id="fecha" name="fecha" type="date" class="form-control bg-dark text-warning border-warning"
+                    [(ngModel)]="contacto.fecha" required [min]="fechaMinima" #fecha="ngModel" />
+                  @if ((fecha.invalid && fecha.touched) || esFechaAnterior()) {
+                  <div class="form-text text-danger">
+                    @if (fecha.errors?.['required']) {
+                    <small>La fecha es obligatoria.</small>
+                    }
+                    @if (esFechaAnterior()) {
+                    <small>No puedes seleccionar una fecha anterior a hoy.</small>
+                    }
+                  </div>
+                  }
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100"
+                  [disabled]="formulario.invalid || esFechaAnterior()">
+                  Enviar Mensaje
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<section class="location">
+  <h2>Encuéntranos</h2>
+
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3701.6370772490664!2d-102.3154096!3d21.910046899999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429ef1da1ab338d%3A0x89a0246637c42ddb!2sUniversidad%20Aut%C3%B3noma%20de%20Aguascalientes!5e0!3m2!1ses-419!2smx!4v1747073231111!5m2!1ses-419!2smx"
+    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+    ></iframe>
+
+</section>
+
+<section class="team-section">
+  <h2>Nuestro Equipo</h2>
+  <div class="team-members">
+    <div class="member">
+      <img src="assets/imagenes/Hugo.jpeg" alt="Integrante 1">
+      <h3>Hugo Vazquez Hernandez</h3>
+      <p>Soy estudiante de la Licenciatura en Ingeniería en Sistemas Computacionales en la UAA, he tenido la
+        oportunidad de aplicar mis conocimientos y habilidades en el desarrollo de software a través de la
+        implementación de este mini-proyecto en Angular. Mi participación consistio en la creación de la interfaz de
+        usuario, a integración de la lógica del
+        proyecto.
+      </p>
+    </div>
+    <div class="member">
+      <img src="assets/imagenes/Andre.jpeg" alt="Integrante 2">
+      <h3>Andre Velazquez Acuña</h3>
+      <p>Mi participación en el desarrollo de un mini-proyecto en Angular, como estudiante de la Licenciatura en Ingeniería en Sistemas Computacionales en la UAA, se centró en la creación de la interfaz de usuario y la integración de la lógica que impulsa su funcionamiento.</p>
+    </div>
+    <div class="member">
+      <img src="assets/imagenes/Andres.jpeg" alt="Integrante 3">
+      <h3>Andres Francisco de Anda</h3>
+      <p>Hola! Soy estudiante de Ingeniería en Sistemas Computacionales en la UAA, he aplicado mis conocimientos en desarrollo de software mediante la implementación de un mini-proyecto en Angular. Fui parte del desarrollo de esta pagina junto con mis compañeros.</p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,77 @@
+form {
+  padding: 20px;
+  background-color: #121212; 
+  border-radius: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Color naranja para las etiquetas, inputs y mensajes */
+label, input, select, small {
+  color: orange;
+}
+
+/* Estilos extra para inputs y selects */
+input, select {
+  background-color: #1e1e1e;
+  border: 1px solid orange;
+  padding: 8px;
+  border-radius: 5px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Botón naranja */
+button {
+  background-color: orange;
+  color: black;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[disabled] {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
+/* Mensajes de error */
+small {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.8em;
+}
+
+.fondo-con-imagen {
+  background-image: url('/assets/imagenes/Formulario/Ejercicio1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.contenido-formulario {
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 1200px;
+  width: 100%;
+  animation: fadeInUp 1s ease forwards;
+}
+
+/* Animación */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

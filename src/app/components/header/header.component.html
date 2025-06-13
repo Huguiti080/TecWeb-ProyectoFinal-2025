@@ -1,0 +1,15 @@
+<header>
+  <div class="logo">
+    <a href="index.html">
+      <img src="assets/imagenes/Logotipo.png" alt="Logo del gimnasio">
+    </a>
+    <p class="lema">Unidos por la fuerza, imparables en el proceso</p>
+  </div>
+
+  <app-navbar 
+    [user]="user"
+    (menuItemClicked)="handleNavbarEvent({type: 'menuItemClicked', data: $event})"
+    (loginRequested)="handleNavbarEvent({type: 'loginRequested'})"
+    (logoutRequested)="handleNavbarEvent({type: 'logoutRequested'})">
+  </app-navbar>
+</header>

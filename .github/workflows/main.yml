@@ -1,0 +1,31 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Cambia a 'master' si esa es tu rama principal
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Puedes ajustar la versión de Node según tus necesidades
+
+      - name: Install dependencies
+        run: npm ci  # Usa 'npm ci' en lugar de 'npm install' para instalaciones más consistentes
+
+      - name: Build
+        run: npm run build -- --base-href=/gimnasio-app/  # Asegúrate de que la base-href es correcta
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/gimnasio-app  # Ajusta esta ruta según la estructura de tu proyecto
+          branch: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}

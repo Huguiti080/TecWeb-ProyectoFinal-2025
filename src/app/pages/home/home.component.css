@@ -1,0 +1,440 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  color: white;
+}
+
+.hero-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1rem;
+  min-height: 45vh;
+  overflow: hidden; /* Para evitar que el video se desborde */
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Hace que el video cubra todo el contenedor */
+  z-index: 0; /* Coloca el video detrás del contenido */
+}
+
+.content-overlay {
+  position: relative;
+  z-index: 1; /* Coloca el contenido por encima del video */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Overlay oscuro para mejorar legibilidad */
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.tagline {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.cta-buttons {
+  margin-top: 1rem;
+}
+
+.cta-button {
+  display: inline-block;
+  background-color: #f1c40f; /* Amarillo para coincidir con los botones existentes */
+  color: #000;
+  font-weight: bold;
+  padding: 0.8rem 1.8rem;
+  border-radius: 50px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.cta-button:hover {
+  background-color: #f39c12;
+  transform: scale(1.05);
+}
+
+/* Estilos de la sección de Descripción y Carrusel */
+.about-carousel-section {
+  padding: 4rem 0;
+  background-color: #f8f9fa;
+}
+
+.about-carousel-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+/* Estilos para la descripción del gimnasio (lado izquierdo) */
+.gym-description {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 300px;
+}
+
+.gym-description h2 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  color: #333;
+  position: relative;
+}
+
+.gym-description h2:after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background-color: #f8d32d;
+}
+
+.tagline-description {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #666;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+}
+
+.main-description {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+.commitment {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  color: #222;
+  padding-left: 1rem;
+  border-left: 4px solid #f8d32d;
+}
+
+
+/* Estilos del Carrusel (lado derecho) */
+.carousel-container {
+  flex: 1;
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  min-width: 300px;
+  padding: 0 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 600px; /* Altura fija para el contenedor del carrusel */
+}
+
+.carousel-container h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+.carousel-track {
+  position: relative;
+  height: 500px;
+  width: 100%;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Cambiado de cover a contain para mostrar la imagen completa */
+  border-radius: 8px;
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  text-align: center;
+  border-radius: 0 0 8px 8px;
+  max-height: 30%; /* Limitamos la altura de la caption para que sea proporcional */
+  overflow: auto; /* Si el texto es largo, permitimos scroll */
+}
+
+.carousel-caption h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.carousel-prev,
+.carousel-next {
+  background: #f8d32d;
+  color: black;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin: 0 10px;
+  transition: all 0.3s ease;
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+  background: #e5c325;
+  transform: scale(1.1);
+}
+
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  margin: 0 10px;
+}
+
+.carousel-indicators span {
+  width: 12px;
+  height: 12px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-indicators span.active {
+  background-color: #f8d32d;
+  transform: scale(1.2);
+}
+/* Services Section */
+.services-section {
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.service-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.service-button {
+  background-color: #f1c40f;
+  color: #000;
+  font-weight: bold;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.service-button:hover {
+  background-color: #f39c12;
+  transform: scale(1.05);
+}
+
+/* Features Section */
+.features-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem 1rem;
+  background-color: #111;
+}
+
+.feature {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+  background-color: #1a1a1a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.feature h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: #f1c40f;
+}
+
+.feature p {
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+/* Testimonials Section */
+.testimonials-section {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.testimonials-section h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #f1c40f;
+}
+
+.testimonials-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.testimonial {
+  flex: 1;
+  min-width: 280px;
+  max-width: 500px;
+  background-color: #1a1a1a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  position: relative;
+}
+
+.quote {
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: #f8f8f8;
+}
+
+.author {
+  font-weight: bold;
+  color: #f1c40f;
+  text-align: right;
+}
+
+/* Join Section */
+.join-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9));
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.join-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.join-section p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #f1c40f;
+}
+
+.join-button {
+  display: inline-block;
+  background-color: #f1c40f;
+  color: #000;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.join-button:hover {
+  background-color: #f39c12;
+  transform: scale(1.05);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+  
+  .tagline {
+    font-size: 1.2rem;
+  }
+  
+  .features-section,
+  .testimonials-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .feature,
+  .testimonial {
+    max-width: 100%;
+  }
+}

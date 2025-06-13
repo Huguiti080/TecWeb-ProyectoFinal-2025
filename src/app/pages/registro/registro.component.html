@@ -1,0 +1,53 @@
+<div class="registro-container">
+
+  @if (!modoSeleccion) {
+    <h2>Selecciona el tipo de registros</h2>
+    <button (click)="verTipo('registro')">Registros de registro</button>
+    <button (click)="verTipo('contacto')">Registros de contacto</button>
+  }
+
+  @if (modoSeleccion && tipo === 'registro') {
+    <h2>Registros Guardados</h2>
+
+    <ul>
+      @for (r of registros; track r) {
+        <li>
+          <strong>#{{ $index + 1 }}:</strong> {{ r | json }}
+          <button (click)="editarRegistro($index)">Editar</button>
+          <button (click)="eliminarRegistro($index)">Eliminar</button>
+        </li>
+      }
+    </ul>
+
+    @if (modoEdicion) {
+      <div class="editar-formulario">
+        <h3>Editar Registro</h3>
+        <form (ngSubmit)="guardarEdicion()">
+          <label>Nombre:
+            <input [(ngModel)]="registroEditado.nombre" name="nombre" required>
+          </label>
+          <label>Correo:
+            <input [(ngModel)]="registroEditado.correo" name="correo" required>
+          </label>
+          <label>Teléfono:
+            <input [(ngModel)]="registroEditado.telefono" name="telefono" required>
+          </label>
+          <label>Servicio:
+            <input [(ngModel)]="registroEditado.servicio" name="servicio" required>
+          </label>
+          <button type="submit">Guardar</button>
+          <button type="button" (click)="cancelarEdicion()">Cancelar</button>
+        </form>
+      </div>
+    }
+
+    <button (click)="volver()">Volver al menú</button>
+  }
+
+  @if (modoSeleccion && tipo === 'contacto') {
+    <h2>Registros de contacto</h2>
+    <p>(Aquí mostraremos los datos de contacto más adelante...)</p>
+    <button (click)="volver()">Volver al menú</button>
+  }
+
+</div>

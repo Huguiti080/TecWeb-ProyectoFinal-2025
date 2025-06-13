@@ -1,0 +1,92 @@
+:host {
+  display: block;
+  width: 100%;
+  margin-top: auto; /* Esta es la clave para "empujar" el footer hasta abajo */
+  background-color: black;
+}
+
+/* Luego puedes mantener los demás estilos que ya tienes para el footer */
+
+footer {
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  width: 100%;
+  z-index: 100;
+  /* Cambiamos sticky por relative o eliminamos la propiedad position */
+  position: relative; 
+  /* Ya no necesitamos bottom: 0 con este enfoque */
+}
+
+footer .container {
+  max-width: 1200px; /* Limita el ancho del contenido para una mejor lectura */
+  margin: 0 auto;    /* Centra el contenido dentro del footer */
+  padding: 0 20px;   /* Añade un poco de espacio a los lados en pantallas más pequeñas */
+  display: flex;      /* Permite alinear los elementos internos */
+  flex-direction: column; /* Organiza los elementos verticalmente en pantallas pequeñas */
+  align-items: center; /* Centra los elementos horizontalmente */
+  justify-content: center; /* Centra los elementos verticalmente */
+}
+
+footer .copyright {
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  color: #ccc; /* Un tono de gris suave para el texto */
+}
+
+footer .social-icons {
+  margin-bottom: 10px;
+}
+
+footer .social-icons a {
+  display: inline-block; /* Permite aplicar márgenes y paddings */
+}
+
+footer .social-icons img {
+  width: 32px; /* Aumenta un poco el tamaño de los iconos */
+  height: auto;
+  margin: 0 15px; /* Aumenta el espacio entre los iconos */
+  opacity: 0.7;    /* Reduce ligeramente la opacidad para un toque sutil */
+  transition: opacity 0.3s ease-in-out; /* Transición suave al pasar el ratón */
+}
+
+footer .social-icons img:hover {
+  opacity: 1; /* Opacidad completa al pasar el ratón */
+}
+
+footer .credits {
+  font-size: 0.8em;
+  color: #999;
+}
+
+footer .credits a {
+  color: #eee;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+footer .credits a:hover {
+  color: white;
+}
+
+/* Media query para pantallas más grandes (opcional) */
+@media (min-width: 600px) {
+  footer .container {
+      flex-direction: row; /* Organiza los elementos horizontalmente en pantallas más grandes */
+      justify-content: space-between; /* Espacia los elementos (copyright a la izquierda, iconos y créditos a la derecha) */
+      align-items: center;
+  }
+
+  footer .copyright {
+      margin-bottom: 0;
+  }
+
+  footer .social-icons {
+      margin-bottom: 0;
+  }
+
+  footer .credits {
+      text-align: right;
+  }
+}

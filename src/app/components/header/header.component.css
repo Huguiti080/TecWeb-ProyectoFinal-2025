@@ -1,0 +1,55 @@
+header {
+  background-color: black;
+  color: gold;
+  padding: 20px 20px;
+  display: flex;
+  align-items: center; /* Centra verticalmente los elementos */
+  justify-content: space-between; /* Distribuye el espacio entre los elementos */
+}
+
+header .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+header .logo img {
+  width: 80px;
+  height: auto;
+}
+
+header .logo h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+header .lema {
+  font-size: 16px;
+  color: #ddd;
+  font-style: italic;
+  /* Elimina el margin-bottom si no lo necesitas con esta disposición */
+  /* margin-bottom: 15px; */
+}
+
+
+
+header nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 20px;
+}
+
+header nav ul li a {
+  color: gold;
+  text-decoration: none;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+  color: #ffcc00;
+}
