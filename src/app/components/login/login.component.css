@@ -1,3 +1,4 @@
+/* Estilos base */
 .login-container {
   display: flex;
   justify-content: center;
@@ -5,6 +6,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #e9c202 0%, #fff9e6 50%, #e9c202 100%);
   padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .login-card {
@@ -12,7 +14,7 @@
   max-width: 420px;
   padding: 40px;
   border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.98);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -31,6 +33,11 @@ h2 {
   font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.5px;
+}
+
+/* Formulario */
+.main-form {
+  margin-bottom: 24px;
 }
 
 .form-group {
@@ -71,6 +78,27 @@ label {
   box-shadow: 0 0 0 3px rgba(255, 118, 117, 0.2);
 }
 
+/* Password toggle */
+.password-container {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #636e72;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.password-toggle:hover {
+  color: #ffb142;
+}
+
+/* Validación */
 .validation-error {
   color: #ff7675;
   font-size: 13px;
@@ -80,6 +108,7 @@ label {
   gap: 4px;
 }
 
+/* Botón de login */
 .btn-login {
   width: 100%;
   padding: 16px;
@@ -94,6 +123,8 @@ label {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-top: 10px;
+  position: relative;
+  height: 48px;
 }
 
 .btn-login:hover {
@@ -111,6 +142,22 @@ label {
   transform: none;
 }
 
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error message */
 .error-message {
   background-color: #ffebee;
   color: #c62828;
@@ -126,16 +173,7 @@ label {
   gap: 8px;
 }
 
-/* Efectos adicionales */
-.password-toggle {
-  position: absolute;
-  right: 12px;
-  top: 38px;
-  cursor: pointer;
-  color: #636e72;
-  font-size: 18px;
-}
-
+/* Olvidé contraseña */
 .forgot-password {
   text-align: right;
   margin-top: -16px;
@@ -147,12 +185,15 @@ label {
   font-size: 13px;
   text-decoration: none;
   transition: color 0.3s;
+  cursor: pointer;
 }
 
 .forgot-password a:hover {
   color: #ffb142;
+  text-decoration: underline;
 }
 
+/* Divisor */
 .divider {
   display: flex;
   align-items: center;
@@ -175,28 +216,42 @@ label {
   margin-left: 16px;
 }
 
+/* Botón Google */
 .social-login {
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 20px;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
-.social-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.google-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  background: white;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  color: #2d3436;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.3s;
+  transition: all 0.3s;
 }
 
-.social-icon:hover {
-  transform: scale(1.1);
+.google-btn:hover {
+  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.google-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Enlace registro */
 .signup-link {
   text-align: center;
   margin-top: 24px;
@@ -209,9 +264,26 @@ label {
   font-weight: 600;
   text-decoration: none;
   transition: color 0.3s;
+  cursor: pointer;
 }
 
 .signup-link a:hover {
   color: #ff8c00;
   text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .form-control {
+    padding: 12px 14px;
+  }
 }

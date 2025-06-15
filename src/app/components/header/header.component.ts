@@ -1,18 +1,20 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component'; 
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from "../login/login.component";
+import { AppUser } from '../../services/auth/auth-interfaces';
+//import { LoginComponent } from "../login/login.component";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [NavbarComponent, CommonModule, LoginComponent],
+  imports: [NavbarComponent, CommonModule,],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
   // Recibe el usuario desde AppComponent
-  @Input() user: { fullName: string } | null = null;
+ // Actualizar el input
+@Input() user: AppUser | null = null;
 
   
 

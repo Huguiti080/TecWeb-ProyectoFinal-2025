@@ -1,31 +1,34 @@
 <nav>
   <ul>
-    <!-- Modificado para usar navigateTo() -->
-    <li><a (click)="navigateTo('inicio')" [class.active]="isActive('inicio')">Inicio</a></li>
-    <li><a (click)="navigateTo('Planes')" [class.active]="isActive('planes')">Planes</a></li>
-    <li><a (click)="navigateTo('clases')" [class.active]="isActive('clases')">Clases</a></li>
-    <li><a (click)="navigateTo('productos')" [class.active]="isActive('productos')">Productos</a></li>
-    <li><a (click)="navigateTo('servicios')" [class.active]="isActive('servicios')">Regístrate</a></li>
-    <li><a (click)="navigateTo('contacto')" [class.active]="isActive('contacto')">Contacto</a></li>
-    
-    <!-- Item condicional para usuarios logueados -->
-    <li *ngIf="isLoggedIn">
-      <a (click)="navigateTo('registro')" [class.active]="isActive('registro')">Registros</a>
+    <!-- Items dinámicos con RouterLink -->
+    <li *ngFor="let item of navItems">
+      <a 
+        [routerLink]="item.path" 
+        routerLinkActive="active"
+        (click)="menuItemClicked.emit(item.label)">
+        {{item.label}}
+      </a>
     </li>
 
-    <!-- Botón de login (modificado para emitir evento) -->
-    <button *ngIf="!isLoggedIn" class="btn-login" (click)="login()">
-      <i class="fas fa-user"></i> Iniciar Sesión
-    </button>
-  </ul>
+    <!-- Item condicional para admin -->
+    <li *ngIf="user">
+      <a routerLink="/registro" routerLinkActive="active">Registros</a>
+    </li>
 
-  <div class="auth-container">
-    <!-- Área de usuario logueado -->
-    <div *ngIf="isLoggedIn" class="user-info">
-      <span class="welcome-message">¡Bienvenido, {{ userName }}!</span>
-      <button class="btn-logout" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    <!-- Botón condicional -->
+    <li *ngIf="!user; else userControls">
+      <button class="btn-login" (click)="login()">
+        <i class="fas fa-user"></i> Iniciar Sesión
       </button>
-    </div>
-  </div>
+    </li>
+
+    <ng-template #userControls>
+      <li class="user-info">
+        <span *ngIf="user">¡Bienvenido, {{user.fullName}}!</span>
+        <button class="btn-logout" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Salir
+        </button>
+      </li>
+    </ng-template>
+  </ul>
 </nav>

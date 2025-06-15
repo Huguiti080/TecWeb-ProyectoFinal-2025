@@ -1,56 +1,46 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  
-  @Input() set user(user: { fullName: string } | null) {
-    this.isLoggedIn = !!user;
-    if (user) {
-      this.userName = user.fullName;
-    }
-  }
-
-  
-  @Output() loginRequested = new EventEmitter<void>();
-  @Output() logoutRequested = new EventEmitter<void>();
+  // Input/Output mejor tipados
+  @Input() user: { fullName: string } | null = null;
   @Output() menuItemClicked = new EventEmitter<string>();
-
+  
+  // Eliminados loginRequested/logoutRequested (manejados internamente)
   isLoggedIn = false;
-  userName: string = '';
+  userName = '';
+
+  // Items de navegación centralizados
+  navItems = [
+    { path: '/inicio', label: 'Inicio' },
+    { path: '/planes', label: 'Planes' },
+    { path: '/clases', label: 'Clases' },
+    { path: '/productos', label: 'Productos' },
+    { path: '/servicios', label: 'Regístrate' },
+    { path: '/contacto', label: 'Contacto' }
+  ];
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  
-  login(): void {
-    this.loginRequested.emit(); 
-    this.router.navigate(['/login']); 
+  // Manejo simplificado de login
+  async login() {
+    await this.router.navigate(['/login']);
   }
 
-  
-  logout(): void {
-    this.logoutRequested.emit(); 
-    this.authService.logout();
-    this.router.navigate(['/inicio']);
-  }
-
-  
-  navigateTo(route: string): void {
-    this.menuItemClicked.emit(route); 
-    this.router.navigate([route]); 
-  }
-
-    
-  isActive(route: string): boolean {
-    return this.router.url.includes(route);
+  // Logout con confirmación
+  async logout() {
+    if (confirm('¿Estás seguro de cerrar sesión?')) {
+      await this.authService.logout();
+      this.router.navigate(['/inicio']);
+    }
   }
 }
