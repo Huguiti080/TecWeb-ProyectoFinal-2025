@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { AuthService } from './services/auth.service';
+import { AppUser, AuthService } from './services/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +13,11 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
   title = 'gimnasio-app';
-  currentUser: { fullName: string } | null = null;
+  currentUser: AppUser| null = null;
 
   constructor(private authService: AuthService) {
     // Suscripción al estado de autenticación
-    this.authService.currentUser.subscribe(user => {
+    this.authService.currentUser$.subscribe((user: AppUser | null) => {
       this.currentUser = user;
     });
   }

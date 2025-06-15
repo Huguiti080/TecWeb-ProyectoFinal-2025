@@ -1,16 +1,23 @@
-import { Injectable } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from './auth.service';
 import { inject } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
+import { map } from 'rxjs/operators';
+import { authState } from '@angular/fire/auth';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+  const auth = inject(Auth);
   const router = inject(Router);
-  
-  if (authService.isLoggedIn()) {
-    return true;
-  } else {
-    router.navigate(['/login']);
-    return false;
-  }
+
+  return authState(auth).pipe(
+    map(user => {
+      if (user) {
+        return true; // Usuario autenticado, permite acceso
+      } else {
+        router.navigate(['/login'], { 
+          queryParams: { returnUrl: state.url } // Opcional: Guarda la URL solicitada
+        });
+        return false; // Usuario no autenticado, redirige a login
+      }
+    })
+  );
 };

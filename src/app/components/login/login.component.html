@@ -1,44 +1,67 @@
-
 <div class="login-container">
   <div class="login-card">
     <h2>Iniciar Sesión</h2>
-    
+
+    <!-- Mensaje de error -->
     <div *ngIf="showError" class="error-message">
+      <i class="fas fa-exclamation-circle"></i>
       {{ errorMessage }}
     </div>
-    
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+    <!-- Formulario principal -->
+    <form [formGroup]="loginForm" (ngSubmit)="onEmailLogin()" class="main-form">
       <div class="form-group">
-        <label for="username">Usuario</label>
-        <input 
-          type="text" 
-          id="username" 
-          formControlName="username" 
-          placeholder="Ingrese su usuario"
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" placeholder="Ingrese su email"
           class="form-control"
-          [ngClass]="{'invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
-        >
-        <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="validation-error">
-          Usuario es requerido
+          [ngClass]="{'invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}">
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="validation-error">
+          <i class="fas fa-exclamation-circle"></i>
+          Email es requerido y debe ser válido
         </div>
       </div>
-      
+
       <div class="form-group">
         <label for="password">Contraseña</label>
-        <input 
-          type="password" 
-          id="password" 
-          formControlName="password" 
-          placeholder="Ingrese su contraseña"
-          class="form-control"
-          [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
-        >
+        <div class="password-container">
+          <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" 
+            placeholder="Ingrese su contraseña" class="form-control"
+            [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+          <i class="fas fa-eye password-toggle" 
+             [ngClass]="{'fa-eye-slash': showPassword}" 
+             (click)="togglePasswordVisibility()"></i>
+        </div>
         <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="validation-error">
-          Contraseña es requerida
+          <i class="fas fa-exclamation-circle"></i>
+          Contraseña es requerida (mínimo 6 caracteres)
         </div>
       </div>
-      
-      <button type="submit" class="btn-login" [disabled]="loginForm.invalid">Ingresar</button>
+
+      <div class="forgot-password">
+        <a (click)="onForgotPassword()">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loginForm.invalid">
+        <span *ngIf="!loading">INGRESAR</span>
+        <span *ngIf="loading" class="spinner"></span>
+      </button>
     </form>
+
+    <!-- Divisor -->
+    <div class="divider">
+      <span>o</span>
+    </div>
+
+    <!-- Autenticación social -->
+    <div class="social-login">
+      <button (click)="loginWithGoogle()" class="social-btn google-btn">
+        <img src="assets/google-icon.png" alt="Google logo">
+        Continuar con Google
+      </button>
+    </div>
+
+    <div class="signup-link">
+      ¿No tienes cuenta? <a routerLink="/registro">Regístrate</a>
+    </div>
   </div>
 </div>
