@@ -1,0 +1,125 @@
+<!-- <div class="email-auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>{{ isLoginMode() ? 'Iniciar Sesión' : 'Crear Cuenta' }}</h2>
+      <p class="auth-subtitle">
+        {{ isLoginMode() ? 'Ingresa a tu cuenta del gym' : 'Únete a nuestro gym' }}
+      </p>
+    </div>
+
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group" *ngIf="!isLoginMode()">
+        <label for="displayName">Nombre completo</label>
+        <input
+          type="text"
+          id="displayName"
+          formControlName="displayName"
+          placeholder="Tu nombre completo"
+          [class.error]="authForm.get('displayName')?.touched && authForm.get('displayName')?.errors"
+        />
+        <div class="error-message" *ngIf="authForm.get('displayName')?.touched && authForm.get('displayName')?.errors?.['required']">
+          El nombre es requerido
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="tu@email.com"
+          [class.error]="authForm.get('email')?.touched && authForm.get('email')?.errors"
+        />
+        <div class="error-message" *ngIf="authForm.get('email')?.touched && authForm.get('email')?.errors?.['required']">
+          El email es requerido
+        </div>
+        <div class="error-message" *ngIf="authForm.get('email')?.touched && authForm.get('email')?.errors?.['email']">
+          Ingresa un email válido
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <div class="password-input">
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            [placeholder]="isLoginMode() ? 'Tu contraseña' : 'Mínimo 6 caracteres'"
+            [class.error]="authForm.get('password')?.touched && authForm.get('password')?.errors"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+          >
+            {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <div class="error-message" *ngIf="authForm.get('password')?.touched && authForm.get('password')?.errors?.['required']">
+          La contraseña es requerida
+        </div>
+        <div class="error-message" *ngIf="authForm.get('password')?.touched && authForm.get('password')?.errors?.['minlength']">
+          La contraseña debe tener al menos 6 caracteres
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage()">
+        {{ errorMessage() }}
+      </div>
+
+      <div class="success-message" *ngIf="successMessage()">
+        {{ successMessage() }}
+      </div>
+
+      <button
+        type="submit"
+        class="submit-btn"
+        [disabled]="authForm.invalid || isLoading()"
+      >
+        <span *ngIf="isLoading()" class="loading-spinner"></span>
+        {{ isLoading() ? 'Procesando...' : (isLoginMode() ? 'Iniciar Sesión' : 'Crear Cuenta') }}
+      </button>
+
+      <button
+        type="button"
+        class="link-btn"
+        *ngIf="isLoginMode()"
+        (click)="showForgotPassword()"
+      >
+        ¿Olvidaste tu contraseña?
+      </button>
+    </form>
+
+    <form *ngIf="forgotPasswordMode()" [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPassword()" class="forgot-password-form">
+      <h3>Recuperar Contraseña</h3>
+      <div class="form-group">
+        <label for="resetEmail">Email</label>
+        <input
+          type="email"
+          id="resetEmail"
+          formControlName="resetEmail"
+          placeholder="tu@email.com"
+        />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="submit-btn" [disabled]="forgotPasswordForm.invalid || isLoading()">
+          Enviar Email
+        </button>
+        <button type="button" class="secondary-btn" (click)="hideForgotPassword()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+
+    <div class="auth-footer">
+      <p>
+        {{ isLoginMode() ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
+        <button type="button" class="link-btn" (click)="toggleMode()">
+          {{ isLoginMode() ? 'Crear cuenta' : 'Iniciar sesión' }}
+        </button>
+      </p>
+    </div>
+  </div>
+</div> -->

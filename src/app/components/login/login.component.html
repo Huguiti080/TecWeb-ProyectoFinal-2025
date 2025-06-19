@@ -2,66 +2,179 @@
   <div class="login-card">
     <h2>Iniciar Sesión</h2>
 
-    <!-- Mensaje de error -->
+    <!-- Tabs de navegación -->
+    <div class="auth-tabs">
+      <button 
+        type="button"
+        class="tab-button" 
+        [ngClass]="{'active': activeTab === 'email'}"
+        (click)="setActiveTab('email')">
+        <i class="fas fa-envelope"></i>
+        Email
+      </button>
+      <button 
+        type="button"
+        class="tab-button" 
+        [ngClass]="{'active': activeTab === 'phone'}"
+        (click)="setActiveTab('phone')">
+        <i class="fas fa-mobile-alt"></i>
+        SMS
+      </button>
+      <button 
+        type="button"
+        class="tab-button" 
+        [ngClass]="{'active': activeTab === 'google'}"
+        (click)="setActiveTab('google')">
+        <i class="fab fa-google"></i>
+        Google
+      </button>
+    </div>
+
+    <!-- Mensajes de error y éxito -->
     <div *ngIf="showError" class="error-message">
       <i class="fas fa-exclamation-circle"></i>
       {{ errorMessage }}
     </div>
 
-    <!-- Formulario principal -->
-    <form [formGroup]="loginForm" (ngSubmit)="onEmailLogin()" class="main-form">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" formControlName="email" placeholder="Ingrese su email"
-          class="form-control"
-          [ngClass]="{'invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}">
-        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="validation-error">
-          <i class="fas fa-exclamation-circle"></i>
-          Email es requerido y debe ser válido
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <div class="password-container">
-          <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" 
-            placeholder="Ingrese su contraseña" class="form-control"
-            [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
-          <i class="fas fa-eye password-toggle" 
-             [ngClass]="{'fa-eye-slash': showPassword}" 
-             (click)="togglePasswordVisibility()"></i>
-        </div>
-        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="validation-error">
-          <i class="fas fa-exclamation-circle"></i>
-          Contraseña es requerida (mínimo 6 caracteres)
-        </div>
-      </div>
-
-      <div class="forgot-password">
-        <a (click)="onForgotPassword()">¿Olvidaste tu contraseña?</a>
-      </div>
-
-      <button type="submit" class="btn-login" [disabled]="loginForm.invalid">
-        <span *ngIf="!loading">INGRESAR</span>
-        <span *ngIf="loading" class="spinner"></span>
-      </button>
-    </form>
-
-    <!-- Divisor -->
-    <div class="divider">
-      <span>o</span>
+    <div *ngIf="successMessage" class="success-message">
+      <i class="fas fa-check-circle"></i>
+      {{ successMessage }}
     </div>
 
-    <!-- Autenticación social -->
-    <div class="social-login">
-      <button (click)="loginWithGoogle()" class="social-btn google-btn">
-        <img src="assets/iconos/Google.png" alt="Google logo">
-        Continuar con Google
-      </button>
+    <!-- =============================== -->
+    <!-- FORMULARIO EMAIL -->
+    <!-- =============================== -->
+    <div *ngIf="activeTab === 'email'" class="tab-content">
+      <form [formGroup]="loginForm" (ngSubmit)="onEmailLogin()" class="main-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" formControlName="email" placeholder="Ingrese su email"
+            class="form-control"
+            [ngClass]="{'invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}">
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="validation-error">
+            <i class="fas fa-exclamation-circle"></i>
+            Email es requerido y debe ser válido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <div class="password-container">
+            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" 
+              placeholder="Ingrese su contraseña" class="form-control"
+              [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+            <i class="fas fa-eye password-toggle" 
+               [ngClass]="{'fa-eye-slash': showPassword}" 
+               (click)="togglePasswordVisibility()"></i>
+          </div>
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="validation-error">
+            <i class="fas fa-exclamation-circle"></i>
+            Contraseña es requerida (mínimo 6 caracteres)
+          </div>
+        </div>
+
+        <div class="forgot-password">
+          <a (click)="onForgotPassword()">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="loginForm.invalid || loading">
+          <span *ngIf="!loading">INGRESAR</span>
+          <span *ngIf="loading" class="spinner"></span>
+        </button>
+      </form>
     </div>
 
+    <!-- =============================== -->
+    <!-- FORMULARIO SMS -->
+    <!-- =============================== -->
+    <div *ngIf="activeTab === 'phone'" class="tab-content">
+      <form [formGroup]="phoneForm" class="main-form">
+        <!-- Paso 1: Ingresar teléfono -->
+        <div *ngIf="!showVerificationCode" class="phone-step">
+          <div class="form-group">
+            <label for="phoneNumber">Número de teléfono</label>
+            <input type="tel" id="phoneNumber" formControlName="phoneNumber" 
+              placeholder="+52 1234567890" class="form-control"
+              [ngClass]="{'invalid': phoneForm.get('phoneNumber')?.invalid && phoneForm.get('phoneNumber')?.touched}">
+            <div class="input-help">
+              <i class="fas fa-info-circle"></i>
+              Incluye el código de país (ej: +52 para México)
+            </div>
+            <div *ngIf="phoneForm.get('phoneNumber')?.invalid && phoneForm.get('phoneNumber')?.touched" class="validation-error">
+              <i class="fas fa-exclamation-circle"></i>
+              Número de teléfono inválido
+            </div>
+          </div>
+
+          <button type="button" class="btn-login" 
+            (click)="sendSMSCode()" 
+            [disabled]="phoneForm.get('phoneNumber')?.invalid || smsLoading">
+            <span *ngIf="!smsLoading">ENVIAR CÓDIGO</span>
+            <span *ngIf="smsLoading" class="spinner"></span>
+          </button>
+        </div>
+
+        <!-- Paso 2: Verificar código -->
+        <div *ngIf="showVerificationCode" class="verification-step">
+          <div class="verification-info">
+            <i class="fas fa-mobile-alt"></i>
+            <p>Hemos enviado un código de verificación a tu teléfono</p>
+          </div>
+
+          <div class="form-group">
+            <label for="verificationCode">Código de verificación</label>
+            <input type="text" id="verificationCode" formControlName="verificationCode" 
+              placeholder="123456" class="form-control verification-input"
+              [ngClass]="{'invalid': phoneForm.get('verificationCode')?.invalid && phoneForm.get('verificationCode')?.touched}"
+              maxlength="6">
+            <div *ngIf="phoneForm.get('verificationCode')?.invalid && phoneForm.get('verificationCode')?.touched" class="validation-error">
+              <i class="fas fa-exclamation-circle"></i>
+              Código de verificación requerido
+            </div>
+          </div>
+
+          <button type="button" class="btn-login" 
+            (click)="verifyPhoneCode()" 
+            [disabled]="phoneForm.get('verificationCode')?.invalid || smsLoading">
+            <span *ngIf="!smsLoading">VERIFICAR CÓDIGO</span>
+            <span *ngIf="smsLoading" class="spinner"></span>
+          </button>
+
+          <div class="back-to-phone">
+            <!-- <a (click)="resetSMSState()"> -->
+              <i class="fas fa-arrow-left"></i>
+              Cambiar número de teléfono
+            <!-- </a> -->
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- =============================== -->
+    <!-- AUTENTICACIÓN GOOGLE -->
+    <!-- =============================== -->
+    <div *ngIf="activeTab === 'google'" class="tab-content">
+      <div class="google-auth-section">
+        <div class="google-info">
+          <img src="assets/iconos/Google.png" alt="Google logo" class="google-logo">
+          <h3>Continuar con Google</h3>
+          <p>Accede rápidamente con tu cuenta de Google</p>
+        </div>
+
+        <button type="button" (click)="loginWithGoogle()" class="google-btn" [disabled]="loading">
+          <img src="assets/iconos/Google.png" alt="Google logo">
+          <span *ngIf="!loading">Continuar con Google</span>
+          <span *ngIf="loading" class="spinner"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Enlace de registro -->
     <div class="signup-link">
       ¿No tienes cuenta? <a routerLink="/registro">Regístrate</a>
     </div>
+
+    <!-- reCAPTCHA container (invisible) -->
+    <div id="recaptcha-container"></div>
   </div>
 </div>
