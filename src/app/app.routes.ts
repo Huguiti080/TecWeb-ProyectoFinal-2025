@@ -17,7 +17,9 @@ export const routes: Routes = [
   },
   { 
     path: 'servicios', 
-    loadComponent: () => import('./pages/servicios/servicios.component').then(m => m.ServiciosComponent) 
+    loadComponent: () => import('./pages/servicios/servicios.component')
+      .then(m => m.ServiciosComponent),
+    canActivate: [authGuard] // ← aquí
   },
   { 
     path: 'productos', 
@@ -25,7 +27,9 @@ export const routes: Routes = [
   },
   { 
     path: 'contacto', 
-    loadComponent: () => import('./pages/contacto/contacto.component').then(m => m.ContactoComponent) 
+    loadComponent: () => import('./pages/contacto/contacto.component')
+      .then(m => m.ContactoComponent),
+    canActivate: [authGuard] // ← aquí
   },
   { 
     path: 'login', 
