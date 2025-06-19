@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Firestore, collection, collectionData, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contactoregistro',
@@ -10,20 +13,29 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './contactoregistro.component.html',
   styleUrl: './contactoregistro.component.css'
 })
-export class ContactoregistroComponent {
+export class ContactoregistroComponent implements OnInit {
   mensajes: any[] = [];
   modoEdicion: boolean = false;
   mensajeEditando: any = null;
   indexEditando: number = -1;
 
+  constructor(private firestore: Firestore) {}
+
   ngOnInit() {
-    const datos = localStorage.getItem('mensajesContacto');
-    this.mensajes = datos ? JSON.parse(datos) : [];
+    const coleccion = collection(this.firestore, 'contacto');
+    collectionData(coleccion, { idField: 'id' }).subscribe(data => {
+      this.mensajes = data;
+    });
   }
 
   eliminarMensaje(index: number) {
-    this.mensajes.splice(index, 1);
-    localStorage.setItem('mensajesContacto', JSON.stringify(this.mensajes));
+    const mensaje = this.mensajes[index];
+    if (!mensaje?.id) return;
+
+    const ref = doc(this.firestore, 'contacto', mensaje.id);
+    deleteDoc(ref).then(() => {
+      this.mensajes.splice(index, 1);
+    });
   }
 
   editarMensaje(index: number) {
@@ -33,11 +45,19 @@ export class ContactoregistroComponent {
   }
 
   guardarCambios() {
-    if (this.indexEditando !== -1) {
-      this.mensajes[this.indexEditando] = this.mensajeEditando;
-      localStorage.setItem('mensajesContacto', JSON.stringify(this.mensajes));
+    const mensaje = this.mensajeEditando;
+    if (!mensaje?.id) return;
+
+    const ref = doc(this.firestore, 'contacto', mensaje.id);
+    updateDoc(ref, {
+      nombre: mensaje.nombre,
+      correo: mensaje.correo,
+      telefono: mensaje.telefono,
+      mensaje: mensaje.mensaje
+    }).then(() => {
+      this.mensajes[this.indexEditando] = mensaje;
       this.cancelarEdicion();
-    }
+    });
   }
 
   cancelarEdicion() {
