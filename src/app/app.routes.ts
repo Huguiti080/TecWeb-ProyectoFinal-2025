@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '../app/services/auth.guard'; // Asegúrate de que la ruta del guard sea correcta
+import { authGuard } from '../app/services/auth.guard'; 
+import { adminGuard } from './guards/admin.guard'; 
 
 export const routes: Routes = [
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
@@ -35,13 +36,17 @@ export const routes: Routes = [
     path: 'login', 
     loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent) 
   },
-  { 
-    path: 'registro', 
-    loadComponent: () => import('./pages/registro/registro.component').then(m => m.RegistroComponent) 
+  {
+    path: 'registro',
+    loadComponent: () => import('./pages/registro/registro.component')
+      .then(m => m.RegistroComponent),
+    canActivate: [adminGuard] // ← solo admin
   },
-  { 
-    path: 'contactoregistro', 
-    loadComponent: () => import('./pages/contactoregistro/contactoregistro.component').then(m => m.ContactoregistroComponent) 
+  {
+    path: 'contactoregistro',
+    loadComponent: () => import('./pages/contactoregistro/contactoregistro.component')
+      .then(m => m.ContactoregistroComponent),
+    canActivate: [adminGuard] // ← solo admin
   },
   { 
     path: 'admin', 
