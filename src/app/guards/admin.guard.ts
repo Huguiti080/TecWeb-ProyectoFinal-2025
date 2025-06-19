@@ -16,7 +16,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
         router.navigate(['/login']);
         return from([false]);
       }
-      const ref = doc(firestore, `usuarios/${user.uid}`);
+      const ref = doc(firestore, `users/${user.uid}`);
       return from(getDoc(ref)).pipe(
         map(docSnap => {
           const data = docSnap.data();
