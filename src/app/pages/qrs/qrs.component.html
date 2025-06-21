@@ -1,0 +1,9 @@
+<div class="container">
+  <h2 class="title">Vista de Códigos QR</h2>
+  <div class="qr-grid">
+    <div class="qr-card" *ngFor="let qr of placeholders">
+      <div class="qr-placeholder">QR</div>
+      <p class="qr-label">Código {{ qr }}</p>
+    </div>
+  </div>
+</div>
