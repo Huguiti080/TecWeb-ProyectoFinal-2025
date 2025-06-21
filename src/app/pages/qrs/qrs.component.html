@@ -1,9 +1,11 @@
 <div class="container">
   <h2 class="title">Vista de Códigos QR</h2>
   <div class="qr-grid">
-    <div class="qr-card" *ngFor="let qr of placeholders">
-      <div class="qr-placeholder">QR</div>
-      <p class="qr-label">Código {{ qr }}</p>
+    <div class="qr-card" *ngFor="let qr of qrDataList">
+      <div class="qr-placeholder">
+        <qrcode [qrdata]="qr" [width]="100" [errorCorrectionLevel]="'M'"></qrcode>
+      </div>
+      <p class="qr-label">Datos: {{ qr }}</p>
     </div>
   </div>
 </div>

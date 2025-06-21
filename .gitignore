@@ -6,6 +6,20 @@
 /out-tsc
 /bazel-out
 
+# Ignorar node_modules del backend y frontend
+node_modules/
+Backend-TecWeb-ProyectoFinal/node_modules/
+
+# Ignorar otros archivos temporales
+dist/
+out-tsc/
+.vscode/
+.env
+*.env
+.DS_Store
+Thumbs.db
+
+
 # Node
 /node_modules
 npm-debug.log
