@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { EmailService } from '../../services/email/email.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -33,7 +34,7 @@ export class ContactoComponent {
   // Fecha mínima (hoy)
   fechaMinima: string = new Date().toISOString().split('T')[0];
 
-  constructor(private firestore: Firestore) {}
+constructor(private firestore: Firestore, private emailService: EmailService) {}
 
   esFechaAnterior(): boolean {
     if (!this.contacto.fecha) return false;
