@@ -1,11 +1,12 @@
 <div class="container">
-  <h2 class="title">Vista de Códigos QR</h2>
+  <h2 class="title">QR Dinámico de Red Social</h2>
   <div class="qr-grid">
-    <div class="qr-card" *ngFor="let qr of qrDataList">
+    <div class="qr-card">
       <div class="qr-placeholder">
-        <qrcode [qrdata]="qr" [width]="100" [errorCorrectionLevel]="'M'"></qrcode>
+        <qrcode [qrdata]="qrRedSocialURL" [width]="150" [errorCorrectionLevel]="'M'"></qrcode>
       </div>
-      <p class="qr-label">Datos: {{ qr }}</p>
+      <p class="qr-label">{{ redSocialActiva }}</p>
+      <p class="qr-label">Enlace: {{ qrRedSocialURL }}</p>
     </div>
   </div>
 </div>

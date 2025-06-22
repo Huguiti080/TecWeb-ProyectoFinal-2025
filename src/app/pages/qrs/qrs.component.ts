@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { QRService, Registro } from '../../services/callAPI/qr.service';
+import { QRService } from '../../services/callAPI/qr.service';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -12,25 +12,21 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrl: './qrs.component.css'
 })
 export class QrsComponent implements OnInit {
-  qrDataList: string[] = [];
+  qrRedSocialURL: string = '';
+  redSocialActiva: string = '';
 
   constructor(private qrService: QRService) {}
 
   ngOnInit(): void {
-    this.qrService.getTodosLosRegistros().subscribe({
-      next: (registros: Registro[]) => {
-        console.log('Registros recibidos:', registros);
-        this.qrDataList = registros.map(reg =>
-          JSON.stringify({
-            nombre: reg.nombre,
-            correo: reg.correo,
-            telefono: reg.telefono,
-            servicio: reg.servicio
-          })
-        );
+    // Solo cargamos la red social activa
+    this.qrService.getRedSocialActiva().subscribe({
+      next: res => {
+        console.log('Red social activa:', res.redSocialActiva);
+this.redSocialActiva = res.redSocialActiva.charAt(0).toUpperCase() + res.redSocialActiva.slice(1);
+        this.qrRedSocialURL = res.url;
       },
       error: err => {
-        console.error('Error al obtener los registros:', err);
+        console.error('Error al obtener red social:', err);
       }
     });
   }

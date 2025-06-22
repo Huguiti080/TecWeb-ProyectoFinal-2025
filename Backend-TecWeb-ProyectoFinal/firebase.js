@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('./tecweb-proyectofinal-2025-firebase-adminsdk-fbsvc-9fe89c0390.json'); // ruta a tu archivo JSON
+const serviceAccount = require('./tecweb-proyectofinal-2025-firebase-adminsdk-fbsvc-9fe89c0390.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -7,4 +7,4 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-module.exports = { db };
+module.exports = { db, admin };

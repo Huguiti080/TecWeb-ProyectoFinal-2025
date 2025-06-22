@@ -21,4 +21,9 @@ export class QRService {
   getTodosLosRegistros(): Observable<Registro[]> {
     return this.http.get<Registro[]>(this.apiUrl);
   }
+
+  getRedSocialActiva(): Observable<{ redSocialActiva: string; url: string }> {
+  return this.http.get<{ redSocialActiva: string; url: string }>('http://localhost:3000/api/redsocial');
+}
+
 }
