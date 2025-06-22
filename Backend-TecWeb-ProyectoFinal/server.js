@@ -1,24 +1,23 @@
 const express = require('express');
 const cors = require('cors');
-const app = express();
-const PORT = 3000;
+const { db } = require('./firebase');
 
+const app = express();
 app.use(cors());
 
-app.get('/api/qr/:id', (req, res) => {
-  const id = req.params.id;
+const PORT = 3000;
 
-  // Simulación de datos como si vinieran de Firebase
-  const datos = {
-    id: id,
-    nombre: "Ejemplo QR",
-    mensaje: "Hola desde Node.js para ID " + id
-  };
-
-  res.json(datos);
+app.get('/api/registros', async (req, res) => {
+  try {
+    const snapshot = await db.collection('registros').get();
+    const registros = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(registros);
+  } catch (error) {
+    console.error('Error al obtener registros:', error);
+    res.status(500).json({ error: 'Error al obtener registros' });
+  }
 });
 
-
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
