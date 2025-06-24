@@ -53,3 +53,60 @@ header nav ul li a {
 header nav ul li a:hover {
   color: #ffcc00;
 }
+
+.accessibility-settings {
+  position: relative;
+  display: inline-block;
+  margin-right: 15px;
+}
+
+.accessibility-settings button {
+  background-color: gold;
+  color: black;
+  border: none;
+  padding: 8px 14px;
+  margin: 4px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.accessibility-settings button:hover {
+  background-color: #ffcc00;
+  transform: scale(1.05);
+}
+
+.accessibility-settings select {
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+#accessibility-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: auto; 
+  background-color: #111;
+  color: gold;
+  border: 1px solid gold;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 250px;
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+  overflow-x: auto; /* por si acaso */
+}
+
+#accessibility-menu section {
+  margin-bottom: 12px;
+}
+
+#accessibility-menu label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}

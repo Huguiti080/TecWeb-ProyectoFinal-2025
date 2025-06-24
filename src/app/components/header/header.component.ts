@@ -37,4 +37,44 @@ export class HeaderComponent {
         break;
     }
   }
+  menuVisible = false;
+toggleMenu() {
+  this.menuVisible = !this.menuVisible;
+}
+
+// LECTOR DE PANTALLA
+synth = window.speechSynthesis;
+utterance = new SpeechSynthesisUtterance("Bienvenido al gimnasio, unidos por la fuerza, imparables en el proceso.");
+
+startSpeech() {
+  this.stopSpeech(); // Reiniciar si ya hay uno
+  this.synth.speak(this.utterance);
+}
+
+pauseSpeech() {
+  this.synth.pause();
+}
+
+stopSpeech() {
+  this.synth.cancel();
+}
+
+// CONTRASTE
+toggleContrast() {
+  document.body.classList.toggle('high-contrast');
+}
+
+// ESCALA DE FUENTE
+adjustFontSize(delta: number) {
+  const html = document.documentElement;
+  const currentSize = parseFloat(window.getComputedStyle(html).fontSize);
+  html.style.fontSize = `${currentSize + delta}px`;
+}
+
+// CAMBIO DE FUENTE
+changeFont(event: Event) {
+  const select = event.target as HTMLSelectElement;
+  document.body.style.fontFamily = select.value;
+}
+
 }
