@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { EmailService } from '../../services/email/email.service';
+import { UrgenciaColorPipe } from '../../pipes/urgencia-color.pipe';
+
+
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-contacto',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UrgenciaColorPipe,],
   templateUrl: './contacto.component.html',
   styleUrls: ['./contacto.component.css']
 })
@@ -40,8 +43,10 @@ constructor(private firestore: Firestore, private emailService: EmailService) {}
     if (!this.contacto.fecha) return false;
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
-    const seleccionada = new Date(this.contacto.fecha);
-    seleccionada.setHours(0, 0, 0, 0);
+
+    const [year, month, day] = this.contacto.fecha.split('-').map(Number);
+    const seleccionada = new Date(year, month - 1, day);
+    
     return seleccionada < hoy;
   }
 

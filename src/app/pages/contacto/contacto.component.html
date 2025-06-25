@@ -72,7 +72,7 @@
                     <small>Debes seleccionar un motivo.</small>
                   </div>
                   }
-                </div>
+
 
                 <div class="mb-3">
                   <label class="form-label">Urgencia del mensaje:</label>
@@ -98,6 +98,12 @@
                     <small>Debes seleccionar el nivel de urgencia.</small>
                   </div>
                   }
+                   @if (contacto.urgencia) {
+                  <div class="form-text text-info">
+                  Nivel de urgencia: {{ contacto.urgencia | urgenciaColor }}
+                </div>
+                  }
+                 </div>
                 </div>
 
                 <div class="mb-3">
