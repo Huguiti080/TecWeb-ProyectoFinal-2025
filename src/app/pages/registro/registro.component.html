@@ -19,6 +19,13 @@
           </li>
         }
       </ul>
+
+      <!-- 🟦 Mostrar gráfica solo si hay registros -->
+      <h3>Estadísticas de Servicios</h3>
+      <canvas baseChart
+        [data]="chartData"
+        [type]="'bar'">
+      </canvas>
     }
 
     @if (registros.length === 0) {
