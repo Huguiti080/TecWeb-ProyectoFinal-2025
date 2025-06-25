@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  useEmulators: false,
   firebaseConfig: {
     projectId: "tecweb-proyectofinal-2025",
     appId: "1:891151412097:web:f01e4bdb0c7c14b73cd680",

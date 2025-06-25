@@ -1,14 +1,14 @@
-<!-- <div class="email-auth-container">
+<div class="email-auth-container">
   <div class="auth-card">
     <div class="auth-header">
-      <h2>{{ isLoginMode() ? 'Iniciar Sesión' : 'Crear Cuenta' }}</h2>
+      <h2>{{ isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta' }}</h2>
       <p class="auth-subtitle">
-        {{ isLoginMode() ? 'Ingresa a tu cuenta del gym' : 'Únete a nuestro gym' }}
+        {{ isLoginMode ? 'Ingresa a tu cuenta del gym' : 'Únete a nuestro gym' }}
       </p>
     </div>
 
-    <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="auth-form">
-      <div class="form-group" *ngIf="!isLoginMode()">
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="auth-form" *ngIf="!forgotPasswordMode">
+      <div class="form-group" *ngIf="!isLoginMode">
         <label for="displayName">Nombre completo</label>
         <input
           type="text"
@@ -43,10 +43,10 @@
         <label for="password">Contraseña</label>
         <div class="password-input">
           <input
-            [type]="showPassword() ? 'text' : 'password'"
+            [type]="showPassword ? 'text' : 'password'"
             id="password"
             formControlName="password"
-            [placeholder]="isLoginMode() ? 'Tu contraseña' : 'Mínimo 6 caracteres'"
+            [placeholder]="isLoginMode ? 'Tu contraseña' : 'Mínimo 6 caracteres'"
             [class.error]="authForm.get('password')?.touched && authForm.get('password')?.errors"
           />
           <button
@@ -54,7 +54,7 @@
             class="password-toggle"
             (click)="togglePasswordVisibility()"
           >
-            {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
           </button>
         </div>
         <div class="error-message" *ngIf="authForm.get('password')?.touched && authForm.get('password')?.errors?.['required']">
@@ -65,34 +65,25 @@
         </div>
       </div>
 
-      <div class="error-message" *ngIf="errorMessage()">
-        {{ errorMessage() }}
-      </div>
-
-      <div class="success-message" *ngIf="successMessage()">
-        {{ successMessage() }}
-      </div>
-
       <button
         type="submit"
         class="submit-btn"
-        [disabled]="authForm.invalid || isLoading()"
+        [disabled]="authForm.invalid"
       >
-        <span *ngIf="isLoading()" class="loading-spinner"></span>
-        {{ isLoading() ? 'Procesando...' : (isLoginMode() ? 'Iniciar Sesión' : 'Crear Cuenta') }}
+        {{ isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta' }}
       </button>
 
       <button
         type="button"
         class="link-btn"
-        *ngIf="isLoginMode()"
+        *ngIf="isLoginMode"
         (click)="showForgotPassword()"
       >
         ¿Olvidaste tu contraseña?
       </button>
     </form>
 
-    <form *ngIf="forgotPasswordMode()" [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPassword()" class="forgot-password-form">
+    <form *ngIf="forgotPasswordMode" [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPassword()" class="forgot-password-form">
       <h3>Recuperar Contraseña</h3>
       <div class="form-group">
         <label for="resetEmail">Email</label>
@@ -104,7 +95,7 @@
         />
       </div>
       <div class="form-actions">
-        <button type="submit" class="submit-btn" [disabled]="forgotPasswordForm.invalid || isLoading()">
+        <button type="submit" class="submit-btn" [disabled]="forgotPasswordForm.invalid">
           Enviar Email
         </button>
         <button type="button" class="secondary-btn" (click)="hideForgotPassword()">
@@ -115,11 +106,11 @@
 
     <div class="auth-footer">
       <p>
-        {{ isLoginMode() ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
+        {{ isLoginMode ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
         <button type="button" class="link-btn" (click)="toggleMode()">
-          {{ isLoginMode() ? 'Crear cuenta' : 'Iniciar sesión' }}
+          {{ isLoginMode ? 'Crear cuenta' : 'Iniciar sesión' }}
         </button>
       </p>
     </div>
   </div>
-</div> -->
+</div>
