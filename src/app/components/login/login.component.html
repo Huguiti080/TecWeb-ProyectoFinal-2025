@@ -10,7 +10,7 @@
         [ngClass]="{'active': activeTab === 'email'}"
         (click)="setActiveTab('email')">
         <i class="fas fa-envelope"></i>
-        Email
+        Cuenta
       </button>
       <button 
         type="button"
@@ -42,14 +42,14 @@
     <div *ngIf="activeTab === 'email'" class="tab-content">
       <form [formGroup]="loginForm" (ngSubmit)="onEmailLogin()" class="main-form">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" formControlName="email" placeholder="Ingrese su email"
+          <label for="email">Cuenta o correo electrónico</label>
+          <input type="text" id="email" formControlName="email" placeholder="Ingrese su cuenta o correo"
             class="form-control"
             (input)="onEmailChange()"
             [ngClass]="{'invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}">
           <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="validation-error">
             <i class="fas fa-exclamation-circle"></i>
-            Email es requerido y debe ser válido
+            Este campo es requerido y debe ser válido
           </div>
         </div>
 
@@ -226,8 +226,5 @@
     <div class="signup-link">
       ¿No tienes cuenta? <a routerLink="/registro">Regístrate</a>
     </div>
-
-    <!-- reCAPTCHA container (invisible) -->
-    <div id="recaptcha-container"></div>
   </div>
 </div>

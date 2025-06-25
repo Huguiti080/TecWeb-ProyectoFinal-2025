@@ -51,8 +51,11 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadComponent: () => import('./components/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
-    canActivate: [authGuard] // Protege esta ruta
+    canActivate: [adminGuard] // Protege esta ruta solo para admin
   },
- 
+  {
+    path: 'no-permission',
+    loadComponent: () => import('./pages/no-permission/no-permission.component').then(m => m.NoPermissionComponent)
+  },
   { path: '**', redirectTo: 'inicio' } // Ruta comodín para 404
 ];

@@ -17,7 +17,7 @@ import {
   UserCredential,
   ConfirmationResult
 } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, serverTimestamp, collection, addDoc, getDoc, deleteDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, serverTimestamp, collection, addDoc, getDoc, deleteDoc, updateDoc, docData } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Observable, BehaviorSubject, from, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
@@ -94,6 +94,7 @@ export class FirebaseAuthService {
     // ========================================
     loginWithGoogle(): Observable<{ success: boolean; user?: User; error?: string }> {
         const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
       
         return from(signInWithPopup(this.auth, provider)).pipe(
           switchMap((result: UserCredential) => {
@@ -188,38 +189,27 @@ export class FirebaseAuthService {
             switchMap(async (result: UserCredential) => {
                 if (result.user) {
                     try {
-                        // Update profile if displayName provided
+                        // Actualiza el perfil con displayName
                         if (displayName) {
                             await updateProfile(result.user, { displayName });
                         }
-                        
-                        // Send email verification
-                        await sendEmailVerification(result.user);
-                        
-                        await this.updateUserData(result.user);
-                        
-                        return { 
-                            success: true, 
-                            user: result.user,
-                            message: 'Cuenta creada exitosamente. Revisa tu email para verificar tu cuenta.' 
-                        };
+                        // Guarda en Firestore con rol 'user'
+                        const userRef = doc(this.firestore, `users/${result.user.uid}`);
+                        await setDoc(userRef, {
+                            uid: result.user.uid,
+                            email: result.user.email,
+                            displayName: displayName || '',
+                            role: 'user',
+                            createdAt: serverTimestamp()
+                        });
+                        return { success: true, user: result.user, message: 'Cuenta creada exitosamente.' };
                     } catch (error) {
-                        console.error('Profile update error:', error);
-                        return { 
-                            success: false, 
-                            error: 'Cuenta creada pero hubo un error al configurar el perfil' 
-                        };
+                        return { success: false, error: 'Error al guardar usuario en Firestore' };
                     }
                 }
                 return { success: false, error: 'Error al crear la cuenta' };
             }),
-            catchError((error: any) => {
-                console.error('Email registration error:', error);
-                return of({ 
-                    success: false, 
-                    error: this.getFirebaseErrorMessage(error.code) 
-                });
-            })
+            catchError((error: any) => of({ success: false, error: this.getFirebaseErrorMessage(error.code) }))
         );
     }
 
@@ -366,6 +356,11 @@ export class FirebaseAuthService {
         return this.getCurrentUser() !== null;
     }
 
+    /**
+     * Actualiza o crea la información del usuario en Firestore.
+     * @param user Objeto User de Firebase Auth con toda la información del usuario, collecion users
+     * @returns Promise que se resuelve cuando se actualiza la información
+     */
     private async updateUserData(user: User): Promise<void> {
         const userRef = doc(this.firestore, `users/${user.uid}`);
         
@@ -392,6 +387,10 @@ export class FirebaseAuthService {
             'auth/invalid-email': 'Email inválido',
             'auth/user-disabled': 'Esta cuenta ha sido deshabilitada',
             'auth/too-many-requests': 'Demasiados intentos fallidos. Intenta más tarde',
+            'auth/popup-closed-by-user': 'Inicio de sesión cancelado. Cierra la ventana de Google.',
+            'auth/popup-blocked': 'El navegador bloqueó la ventana de Google. Permite popups para este sitio.',
+            'auth/cancelled-popup-request': 'Solicitud de inicio de sesión cancelada',
+            'auth/account-exists-with-different-credential': 'Ya existe una cuenta con este email usando otro método de inicio de sesión',
             'auth/invalid-phone-number': 'Número de teléfono inválido',
             'auth/invalid-verification-code': 'Código de verificación inválido',
             'auth/code-expired': 'El código de verificación ha expirado',
@@ -497,7 +496,7 @@ export class FirebaseAuthService {
                 };
                 
                 await setDoc(blockedUserRef, blockedUserData);
-                console.log(`✅ Intentos fallidos reseteados para ${email}`);
+                console.log(`Intentos fallidos reseteados para ${email}`);
             }
         } catch (error) {
             console.error('Error resetting failed attempts:', error);
@@ -619,10 +618,32 @@ export class FirebaseAuthService {
     // ========================================
     
     /**
-     * Guarda un registro de login exitoso en Firestore
-     * @param userId UID del usuario
+     * Guarda un registro de login exitoso en Firestore.
+     * 
+     * FUNCIONALIDAD:
+     * - Registra cada login exitoso para auditoría y análisis
+     * - Permite rastrear patrones de uso y seguridad
+     * - Facilita la detección de actividades sospechosas
+     * - Proporciona datos para reportes de administración
+     * 
+     * DATOS REGISTRADOS:
+     * - userId: ID único del usuario (Firebase Auth UID)
+     * - emailOrPhone: Email o número de teléfono usado para login
+     * - method: Método de autenticación ('email', 'google', 'phone')
+     * - timestamp: Fecha y hora exacta del login (serverTimestamp)
+     * 
+     * COLECCIÓN: logins (colección automática)
+     * 
+     * CASOS DE USO:
+     * - Auditoría de seguridad
+     * - Análisis de patrones de uso
+     * - Detección de logins no autorizados
+     * - Reportes de actividad de usuarios
+     * - Cumplimiento de regulaciones (GDPR, etc.)
+     * 
+     * @param userId UID del usuario de Firebase Auth
      * @param emailOrPhone Email o número de teléfono del usuario
-     * @param method Método de autenticación usado
+     * @param method Método de autenticación usado ('email', 'google', 'phone')
      * @returns Promise que se resuelve cuando se guarda el registro
      */
     private async guardarLoginExitoso(userId: string, emailOrPhone: string, method: 'email' | 'google' | 'phone'): Promise<void> {
@@ -694,5 +715,26 @@ export class FirebaseAuthService {
             this.recaptchaVerifier.clear();
             this.recaptchaVerifier = null;
         }
+    }
+
+    // Devuelve el rol del usuario
+    getUserRole(uid: string): Observable<string> {
+        const userRef = doc(this.firestore, `users/${uid}`);
+        return docData(userRef).pipe(
+            map((data: any) => data?.role || 'user')
+        );
+    }
+
+    // Devuelve true si el usuario actual es admin
+    isAdmin(): Observable<boolean> {
+        return this.user$.pipe(
+            switchMap(user => {
+                if (!user) return of(false);
+                const userRef = doc(this.firestore, `users/${user.uid}`);
+                return docData(userRef).pipe(
+                    map((data: any) => data?.role === 'admin')
+                );
+            })
+        );
     }
 }

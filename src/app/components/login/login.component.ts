@@ -33,12 +33,12 @@ export class LoginComponent {
   isRedirecting = false;
   
   // Estados específicos para SMS
-  showVerificationCode = false;
-  verificationId: string = '';
-  smsLoading = false;
-  confirmationResult: any;
-  recaptchaVerifier!: RecaptchaVerifier;
-  auth = getAuth();
+  showVerificationCode = false;  // Controla si mostrar el formulario de verificación o el de ingreso de teléfono
+  verificationId: string = '';   // ID único de la verificación SMS (proporcionado por Firebase)
+  smsLoading = false;            // Indica si hay un proceso SMS en curso (enviar/verificar código)
+  confirmationResult: any;       // Resultado de la confirmación SMS (Firebase object)
+  recaptchaVerifier!: RecaptchaVerifier;  // Instancia del reCAPTCHA para prevenir spam
+  auth = getAuth();              // Instancia de Firebase Auth
 
   // Información de bloqueo
   currentFailedAttempts = 0;
@@ -58,6 +58,7 @@ export class LoginComponent {
     }, { validators: this.passwordMatchValidator });
 
     // Nuevo formulario para SMS
+    // Valida número de teléfono con código de país y código de verificación de 6 dígitos
     this.phoneForm = this.fb.group({
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
       verificationCode: ['', [Validators.required, Validators.minLength(6)]]
@@ -188,27 +189,23 @@ export class LoginComponent {
         this.firebaseAuth.loginWithEmail(email, password).subscribe({
           next: (result) => {
             this.loading = false;
-            if (result.success) {
+            if (result.success && result.user) {
               // Login exitoso
               this.successMessage = result.message || '¡Bienvenido de vuelta!';
               this.isRedirecting = true;
-              console.log('✅ Login exitoso, redirigiendo a /inicio...');
-              setTimeout(() => {
-                console.log('🔄 Ejecutando redirección...');
-                this.router.navigate(['/inicio']).then(() => {
-                  console.log('✅ Redirección completada');
-                }).catch(err => {
-                  console.error('❌ Error en redirección:', err);
-                });
-              }, 300);
+              this.firebaseAuth.getUserRole(result.user.uid).subscribe(role => {
+                if (role === 'admin') {
+                  this.router.navigate(['/admin']);
+                } else {
+                  this.router.navigate(['/inicio']);
+                }
+              });
             } else {
               // Login fallido - el servicio ya incrementó los intentos
               this.errorMessage = result.error || 'Error en el inicio de sesión';
               this.showError = true;
-              
               // Actualizar contador de intentos fallidos
               this.currentFailedAttempts++;
-              
               // Mostrar mensaje de intentos restantes si no está bloqueado
               if (this.currentFailedAttempts < this.maxAttempts) {
                 const remainingAttempts = this.maxAttempts - this.currentFailedAttempts;
@@ -236,6 +233,8 @@ export class LoginComponent {
   // =====================================
   // AUTENTICACIÓN POR SMS (NUEVO)
   // =====================================
+  
+
   sendSMSCode() {
     if (this.phoneForm.get('phoneNumber')?.invalid) {
       this.errorMessage = 'Por favor ingresa un número de teléfono válido';
@@ -281,6 +280,10 @@ export class LoginComponent {
     });
   }
 
+  /**
+   * Verifica el código SMS ingresado por el usuario y autentica si es correcto.
+
+   */
   verifyPhoneCode() {
     if (this.phoneForm.get('verificationCode')?.invalid) {
       this.errorMessage = 'Por favor ingresa el código de verificación';
@@ -296,18 +299,16 @@ export class LoginComponent {
     this.firebaseAuth.verifyPhoneCode(this.verificationId, verificationCode).subscribe({
       next: (result) => {
         this.smsLoading = false;
-        if (result.success) {
+        if (result.success && result.user) {
           this.successMessage = result.message || '¡Autenticación exitosa!';
           this.isRedirecting = true;
-          console.log('✅ Verificación SMS exitosa, redirigiendo a /inicio...');
-          setTimeout(() => {
-            console.log('🔄 Ejecutando redirección SMS...');
-            this.router.navigate(['/inicio']).then(() => {
-              console.log('✅ Redirección SMS completada');
-            }).catch(err => {
-              console.error('❌ Error en redirección SMS:', err);
-            });
-          }, 300);
+          this.firebaseAuth.getUserRole(result.user.uid).subscribe(role => {
+            if (role === 'admin') {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['/inicio']);
+            }
+          });
         } else {
           this.errorMessage = result.error || 'Código de verificación inválido';
           this.showError = true;
@@ -332,18 +333,16 @@ export class LoginComponent {
     this.firebaseAuth.loginWithGoogle().subscribe({
       next: (result) => {
         this.loading = false;
-        if (result.success) {
+        if (result.success && result.user) {
           this.successMessage = '¡Autenticación exitosa con Google!';
           this.isRedirecting = true;
-          console.log('✅ Login Google exitoso, redirigiendo a /inicio...');
-          setTimeout(() => {
-            console.log('🔄 Ejecutando redirección Google...');
-            this.router.navigate(['/inicio']).then(() => {
-              console.log('✅ Redirección Google completada');
-            }).catch(err => {
-              console.error('❌ Error en redirección Google:', err);
-            });
-          }, 300);
+          this.firebaseAuth.getUserRole(result.user.uid).subscribe(role => {
+            if (role === 'admin') {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['/inicio']);
+            }
+          });
         } else {
           this.errorMessage = result.error || 'Error al autenticar con Google';
           this.showError = true;
@@ -359,7 +358,7 @@ export class LoginComponent {
   }
 
   // =====================================
-  // FUNCIONES AUXILIARES (mantienen tu lógica actual)
+  // FUNCIONES AUXILIARES
   // =====================================
   
   onForgotPassword() {
@@ -449,7 +448,7 @@ export class LoginComponent {
     return strength;
   }
 
-  // Manejo de errores (mantienes tu lógica actual)
+  // Manejo de errores ()
   private getErrorMessage(code: string): string {
     switch (code) {
       case 'auth/user-not-found':
