@@ -9,5 +9,7 @@ export const environment = {
     authDomain: "tecweb-proyectofinal-2025.firebaseapp.com",
     messagingSenderId: "891151412097",
     measurementId: "G-E64BR5P5FZ"
-  }
+  },
+  usEmulators: false
+
 };

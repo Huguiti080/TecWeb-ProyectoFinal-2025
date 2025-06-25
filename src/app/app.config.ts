@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
@@ -13,6 +13,11 @@ import { environment } from '../environments/environment';
 // FontAwesome (opcional)
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
+
+// Service Worker
+import { provideServiceWorker } from '@angular/service-worker';
+
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -52,6 +57,11 @@ export const appConfig: ApplicationConfig = {
     }),
 
     // Firebase Analytics
-    provideAnalytics(() => getAnalytics())
+    provideAnalytics(() => getAnalytics()), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),
+
+  
   ]
 };
