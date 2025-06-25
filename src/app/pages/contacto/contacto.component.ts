@@ -45,33 +45,63 @@ constructor(private firestore: Firestore, private emailService: EmailService) {}
     return seleccionada < hoy;
   }
 
-  async enviarFormulario(form: NgForm) {
-    if (form.valid && !this.esFechaAnterior()) {
-      try {
-        const contactoConFecha = {
-          ...this.contacto,
-          fechaEnvio: new Date()
-        };
+ async enviarFormulario(form: NgForm) {
+  if (form.valid && !this.esFechaAnterior()) {
+    try {
+      const contactoConFecha = {
+        ...this.contacto,
+        fechaEnvio: new Date()
+      };
 
-        await addDoc(collection(this.firestore, 'contacto'), contactoConFecha);
+      await addDoc(collection(this.firestore, 'contacto'), contactoConFecha);
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Mensaje enviado',
-          text: '¡Gracias por contactarnos!',
-          confirmButtonColor: '#f0ad4e'
-        });
+      const mensajeCorreo = `
+Hola ${this.contacto.nombre},
 
-        form.resetForm();
-      } catch (error) {
-        console.error('Error al guardar en Firestore:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo enviar el mensaje. Intenta más tarde.',
-          confirmButtonColor: '#d33'
-        });
-      }
+Gracias por contactarnos con el motivo: ${this.contacto.motivo}.
+Tu mensaje fue: "${this.contacto.mensaje}"
+Urgencia: ${this.contacto.urgencia}
+Fecha de contacto: ${this.contacto.fecha}
+
+Nos pondremos en contacto contigo pronto.
+`;
+
+      // Enviar correo con el servicio
+      this.emailService.sendEmail(
+        this.contacto.correo,
+        this.contacto.asunto,
+        mensajeCorreo
+      ).subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Mensaje enviado',
+            text: '¡Gracias por contactarnos! Revisa tu correo.',
+            confirmButtonColor: '#f0ad4e'
+          });
+          form.resetForm();
+        },
+        error: (err) => {
+          console.error('Error al enviar el correo:', err);
+          Swal.fire({
+            icon: 'warning',
+            title: 'Mensaje enviado, pero...',
+            text: 'El correo de confirmación no pudo enviarse.',
+            confirmButtonColor: '#f0ad4e'
+          });
+        }
+      });
+
+    } catch (error) {
+      console.error('Error al guardar en Firestore:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo enviar el mensaje. Intenta más tarde.',
+        confirmButtonColor: '#d33'
+      });
     }
   }
+}
+
 }
