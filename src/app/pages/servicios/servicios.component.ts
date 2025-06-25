@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-servicios',
@@ -13,7 +15,7 @@ import Swal from 'sweetalert2';
 export class ServiciosComponent {
   formulario: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private firestore: Firestore) {
     this.formulario = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       correo: ['', [Validators.required, Validators.email]],
@@ -27,25 +29,32 @@ export class ServiciosComponent {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
-  guardar() {
+  async guardar() {
     if (this.formulario.valid) {
       const datos = this.formulario.value;
       console.log(datos);
 
-      // Guardamos en localStorage
-      const registros = JSON.parse(localStorage.getItem('registros') || '[]');
-      registros.push(datos);
-      localStorage.setItem('registros', JSON.stringify(registros));
+      try {
+        // Guardamos en Firebase Firestore
+        await addDoc(collection(this.firestore, 'registros'), datos);
 
-      // Alerta bonita con SweetAlert2
-      Swal.fire({
-        icon: 'success',
-        title: 'Formulario enviado',
-        text: '¡Los datos han sido registrados!',
-        confirmButtonColor: '#3085d6'
-      });
+        Swal.fire({
+          icon: 'success',
+          title: 'Formulario enviado',
+          text: '¡Los datos han sido registrados en Firebase!',
+          confirmButtonColor: '#3085d6'
+        });
 
-      this.formulario.reset();
+        this.formulario.reset();
+      } catch (error) {
+        console.error('Error al guardar en Firestore:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al guardar los datos.',
+          confirmButtonColor: '#d33'
+        });
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '../app/services/auth.guard'; // Asegúrate de que la ruta del guard sea correcta
+import { authGuard } from '../app/services/auth.guard'; 
+import { adminGuard } from './guards/admin.guard'; 
 
 export const routes: Routes = [
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
@@ -15,17 +16,21 @@ export const routes: Routes = [
     path: 'clases',
     loadComponent: () => import('./pages/clases/clases.component').then(m => m.ClasesComponent)
   },
-  {
-    path: 'servicios',
-    loadComponent: () => import('./pages/servicios/servicios.component').then(m => m.ServiciosComponent)
+  { 
+    path: 'servicios', 
+    loadComponent: () => import('./pages/servicios/servicios.component')
+      .then(m => m.ServiciosComponent),
+    canActivate: [authGuard] // ← aquí
   },
   {
     path: 'productos',
     loadComponent: () => import('./pages/productos/productos.component').then(m => m.ProductosComponent)
   },
-  {
-    path: 'contacto',
-    loadComponent: () => import('./pages/contacto/contacto.component').then(m => m.ContactoComponent)
+  { 
+    path: 'contacto', 
+    loadComponent: () => import('./pages/contacto/contacto.component')
+      .then(m => m.ContactoComponent),
+    canActivate: [authGuard] // ← aquí
   },
   {
     path: 'login',
@@ -33,11 +38,15 @@ export const routes: Routes = [
   },
   {
     path: 'registro',
-    loadComponent: () => import('./pages/registro/registro.component').then(m => m.RegistroComponent)
+    loadComponent: () => import('./pages/registro/registro.component')
+      .then(m => m.RegistroComponent),
+    canActivate: [adminGuard] // ← solo admin
   },
   {
     path: 'contactoregistro',
-    loadComponent: () => import('./pages/contactoregistro/contactoregistro.component').then(m => m.ContactoregistroComponent)
+    loadComponent: () => import('./pages/contactoregistro/contactoregistro.component')
+      .then(m => m.ContactoregistroComponent),
+    canActivate: [adminGuard] // ← solo admin
   },
   {
     path: 'admin',

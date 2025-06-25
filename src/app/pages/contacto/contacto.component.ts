@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -32,6 +33,8 @@ export class ContactoComponent {
   // Fecha mínima (hoy)
   fechaMinima: string = new Date().toISOString().split('T')[0];
 
+  constructor(private firestore: Firestore) {}
+
   esFechaAnterior(): boolean {
     if (!this.contacto.fecha) return false;
     const hoy = new Date();
@@ -41,22 +44,33 @@ export class ContactoComponent {
     return seleccionada < hoy;
   }
 
-  enviarFormulario(form: NgForm) {
+  async enviarFormulario(form: NgForm) {
     if (form.valid && !this.esFechaAnterior()) {
-      console.log('Mensaje enviado:', this.contacto);
+      try {
+        const contactoConFecha = {
+          ...this.contacto,
+          fechaEnvio: new Date()
+        };
 
-      const mensajes = JSON.parse(localStorage.getItem('mensajesContacto') || '[]');
-      mensajes.push(this.contacto);
-      localStorage.setItem('mensajesContacto', JSON.stringify(mensajes));
+        await addDoc(collection(this.firestore, 'contacto'), contactoConFecha);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Mensaje enviado',
-        text: '¡Gracias por contactarnos!',
-        confirmButtonColor: '#f0ad4e'
-      });
+        Swal.fire({
+          icon: 'success',
+          title: 'Mensaje enviado',
+          text: '¡Gracias por contactarnos!',
+          confirmButtonColor: '#f0ad4e'
+        });
 
-      form.resetForm();
+        form.resetForm();
+      } catch (error) {
+        console.error('Error al guardar en Firestore:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo enviar el mensaje. Intenta más tarde.',
+          confirmButtonColor: '#d33'
+        });
+      }
     }
   }
 }

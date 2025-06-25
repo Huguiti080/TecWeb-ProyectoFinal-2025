@@ -1,74 +1,103 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Firestore, collection, collectionData, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartConfiguration } from 'chart.js';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, NgChartsModule],
   templateUrl: './registro.component.html',
-  styleUrl: './registro.component.css'
+  styleUrl: './registro.component.css',
 })
-export class RegistroComponent {
+export class RegistroComponent implements OnInit {
   modoSeleccion = false;
   tipo: 'registro' | 'contacto' | null = null;
-
   registros: any[] = [];
-  modoEdicion: boolean = false;
+  modoEdicion = false;
   registroEditado: any = {};
-  indexEditando: number = -1;
+  indexEditando = -1;
 
-  constructor(private router: Router) {}
+  // 🟦 GRÁFICA
+  chartData: ChartConfiguration<'bar'>['data'] = {
+    labels: [],
+    datasets: [
+      { data: [], label: 'Cantidad por Servicio' }
+    ]
+  };
 
-  ngOnInit() {
+  constructor(private router: Router, private firestore: Firestore) {}
+
+  ngOnInit(): void {
     this.modoSeleccion = false;
     this.tipo = null;
   }
 
-  verTipo(tipoSeleccionado: 'registro' | 'contacto') {
-    if (tipoSeleccionado === 'contacto') {
-      // Redirigir a la página de registros de contacto
+  verTipo(tipoSel: 'registro' | 'contacto'): void {
+    if (tipoSel === 'contacto') {
       this.router.navigate(['/contactoregistro']);
       return;
     }
 
-    this.tipo = tipoSeleccionado;
+    this.tipo = 'registro';
     this.modoSeleccion = true;
 
-    const data = localStorage.getItem('registros');
-    this.registros = data ? JSON.parse(data) : [];
+    const colRef = collection(this.firestore, 'registros');
+    collectionData(colRef, { idField: 'id' }).subscribe((data) => {
+      this.registros = data;
+      this.generarGrafica(); // ← aquí actualizamos la gráfica cada vez que hay nuevos datos
+    });
   }
 
-  volver() {
-    this.modoSeleccion = false;
-    this.tipo = null;
-    this.modoEdicion = false;
-    this.indexEditando = -1;
+  generarGrafica(): void {
+    const conteo: { [key: string]: number } = {};
+    for (const reg of this.registros) {
+      const servicio = reg.servicio;
+      conteo[servicio] = (conteo[servicio] || 0) + 1;
+    }
+
+    this.chartData.labels = Object.keys(conteo);
+    this.chartData.datasets[0].data = Object.values(conteo);
   }
 
-  eliminarRegistro(index: number) {
-    this.registros.splice(index, 1);
-    localStorage.setItem('registros', JSON.stringify(this.registros));
+  async eliminarRegistro(index: number): Promise<void> {
+    const reg = this.registros[index];
+    if (!reg?.id) return;
+    await deleteDoc(doc(this.firestore, 'registros', reg.id));
   }
 
-  editarRegistro(index: number) {
+  editarRegistro(index: number): void {
     this.indexEditando = index;
     this.registroEditado = { ...this.registros[index] };
     this.modoEdicion = true;
   }
 
-  guardarEdicion() {
-    if (this.indexEditando !== -1) {
-      this.registros[this.indexEditando] = this.registroEditado;
-      localStorage.setItem('registros', JSON.stringify(this.registros));
-      this.cancelarEdicion();
-    }
+  async guardarEdicion(): Promise<void> {
+    if (this.indexEditando === -1) return;
+    const reg = this.registroEditado;
+    await updateDoc(doc(this.firestore, 'registros', reg.id), {
+      nombre: reg.nombre,
+      correo: reg.correo,
+      telefono: reg.telefono,
+      servicio: reg.servicio,
+    });
+    this.cancelarEdicion();
   }
 
-  cancelarEdicion() {
+  cancelarEdicion(): void {
     this.modoEdicion = false;
     this.indexEditando = -1;
     this.registroEditado = {};
   }
+
+  volver(): void {
+    this.modoSeleccion = false;
+    this.tipo = null;
+    this.modoEdicion = false;
+    this.indexEditando = -1;
+  } 
+
 }

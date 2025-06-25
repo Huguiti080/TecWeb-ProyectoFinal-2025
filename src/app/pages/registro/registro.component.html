@@ -9,15 +9,30 @@
   @if (modoSeleccion && tipo === 'registro') {
     <h2>Registros Guardados</h2>
 
-    <ul>
-      @for (r of registros; track r) {
-        <li>
-          <strong>#{{ $index + 1 }}:</strong> {{ r | json }}
-          <button (click)="editarRegistro($index)">Editar</button>
-          <button (click)="eliminarRegistro($index)">Eliminar</button>
-        </li>
-      }
-    </ul>
+    @if (registros.length > 0) {
+      <ul>
+        @for (r of registros; track r) {
+          <li>
+            <strong>#{{ $index + 1 }}:</strong> {{ r | json }}
+            <button (click)="editarRegistro($index)">Editar</button>
+            <button (click)="eliminarRegistro($index)">Eliminar</button>
+          </li>
+        }
+      </ul>
+
+      <!-- 🟦 Mostrar gráfica solo si hay registros -->
+      <h3>Estadísticas de Servicios</h3>
+      <canvas baseChart
+        [data]="chartData"
+        [type]="'bar'">
+      </canvas>
+    }
+
+    @if (registros.length === 0) {
+      <p style="text-align: left; font-style: italic; color: orange; margin-left: 1.5rem;">
+        No hay registros guardados.
+      </p>
+    }
 
     @if (modoEdicion) {
       <div class="editar-formulario">
