@@ -191,12 +191,15 @@ export class LoginComponent {
             this.loading = false;
             if (result.success && result.user) {
               // Login exitoso
-              this.successMessage = result.message || '¡Bienvenido de vuelta!';
               this.isRedirecting = true;
-              this.firebaseAuth.getUserRole(result.user.uid).subscribe(role => {
+              const user = result.user;
+              this.firebaseAuth.getUserRole(user.uid).subscribe(role => {
+                const name = user.displayName || user.email || 'Usuario';
                 if (role === 'admin') {
+                  this.successMessage = '¡Bienvenido Admin!';
                   this.router.navigate(['/admin']);
                 } else {
+                  this.successMessage = `¡Bienvenido ${name}!`;
                   this.router.navigate(['/inicio']);
                 }
               });
