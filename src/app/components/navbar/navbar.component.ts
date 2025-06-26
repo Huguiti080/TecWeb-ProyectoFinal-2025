@@ -27,7 +27,7 @@ export class NavbarComponent {
     { path: '/productos', label: 'Productos' },
     { path: '/servicios', label: 'Regístrate' },
     { path: '/contacto', label: 'Contacto' },
-    { path: '/qrs', label: 'QR' }
+    { path: '/qrs', label: 'QR' },
   ];
 
   constructor(private authService: AuthService, private router: Router) {}

@@ -41,7 +41,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent)
   },
   {
-    path: 'registro:',
+    path: 'registro',
     loadComponent: () => import('./pages/registro/registro.component')
       .then(m => m.RegistroComponent),
     canActivate: [adminGuard] // ← solo admin
