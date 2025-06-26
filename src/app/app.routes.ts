@@ -17,12 +17,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/clases/clases.component').then(m => m.ClasesComponent)
   },
   {
-    path: 'servicios',
+    path: 'servicios/:origen',
     loadComponent: () => import('./pages/servicios/servicios.component')
       .then(m => m.ServiciosComponent),
     canActivate: [authGuard]
   },
-
   {
     path: 'productos',
     loadComponent: () => import('./pages/productos/productos.component').then(m => m.ProductosComponent)
@@ -48,6 +47,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/contactoregistro/contactoregistro.component')
       .then(m => m.ContactoregistroComponent),
     canActivate: [adminGuard] // ← solo admin
+  },
+  {
+    path: 'servicios',
+    loadComponent: () => import('./pages/servicios/servicios.component')
+      .then(m => m.ServiciosComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'admin',
