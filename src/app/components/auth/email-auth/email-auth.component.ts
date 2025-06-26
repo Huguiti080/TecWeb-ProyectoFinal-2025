@@ -1,157 +1,139 @@
-// import { Component, inject, signal } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-// import { Router } from '@angular/router';
-// import { FirebaseAuthService } from '../../../services/auth/firebase-auth.service';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FirebaseAuthService } from '../../../services/auth/firebase-auth.service';
 
-// @Component({
-//   selector: 'app-email-auth',
-//   standalone: true,
-//   imports: [CommonModule, ReactiveFormsModule],
-//   templateUrl: './email-auth.component.html',
-//   styleUrl: './email-auth.component.css'
-// })
-// export class EmailAuthComponent {
-//   private fb = inject(FormBuilder);
-//   private authService = inject(FirebaseAuthService);
-//   private router = inject(Router);
+@Component({
+  selector: 'app-email-auth',
+  templateUrl: './email-auth.component.html',
+  styleUrls: ['./email-auth.component.css']
+})
+export class EmailAuthComponent {
+  @Output() loginSuccess = new EventEmitter<void>();
+  @Output() error = new EventEmitter<string>();
+  @Output() info = new EventEmitter<string>();
+  @Output() loading = new EventEmitter<boolean>();
 
-//   // Signals
-//   isLoginMode = signal(true);
-//   forgotPasswordMode = signal(false);
-//   showPassword = signal(false);
-//   isLoading = signal(false);
-//   errorMessage = signal('');
-//   successMessage = signal('');
+  isLoginMode = true;
+  forgotPasswordMode = false;
+  showPassword = false;
 
-//   // Forms
-//   authForm: FormGroup;
-//   forgotPasswordForm: FormGroup;
+  authForm: FormGroup;
+  forgotPasswordForm: FormGroup;
 
-//   constructor() {
-//     this.authForm = this.fb.group({
-//       displayName: [''],
-//       email: ['', [Validators.required, Validators.email]],
-//       password: ['', [Validators.required, Validators.minLength(6)]]
-//     });
+  constructor(
+    private fb: FormBuilder,
+    private authService: FirebaseAuthService
+  ) {
+    this.authForm = this.fb.group({
+      displayName: [''],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
 
-//     this.forgotPasswordForm = this.fb.group({
-//       resetEmail: ['', [Validators.required, Validators.email]]
-//     });
+    this.forgotPasswordForm = this.fb.group({
+      resetEmail: ['', [Validators.required, Validators.email]]
+    });
 
-//     // Update validators when mode changes
-//     this.updateValidators();
-//   }
+    this.updateValidators();
+  }
 
-//   toggleMode(): void {
-//     this.isLoginMode.set(!this.isLoginMode());
-//     this.clearMessages();
-//     this.authForm.reset();
-//     this.updateValidators();
-//   }
+  toggleMode(): void {
+    this.isLoginMode = !this.isLoginMode;
+    this.clearForms();
+    this.updateValidators();
+  }
 
-//   private updateValidators(): void {
-//     const displayNameControl = this.authForm.get('displayName');
-    
-//     if (this.isLoginMode()) {
-//       displayNameControl?.clearValidators();
-//     } else {
-//       displayNameControl?.setValidators([Validators.required]);
-//     }
-    
-//     displayNameControl?.updateValueAndValidity();
-//   }
+  private updateValidators(): void {
+    const displayNameControl = this.authForm.get('displayName');
+    if (this.isLoginMode) {
+      displayNameControl?.clearValidators();
+    } else {
+      displayNameControl?.setValidators([Validators.required]);
+    }
+    displayNameControl?.updateValueAndValidity();
+  }
 
-//   togglePasswordVisibility(): void {
-//     this.showPassword.set(!this.showPassword());
-//   }
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
-//   showForgotPassword(): void {
-//     this.forgotPasswordMode.set(true);
-//     this.clearMessages();
-//   }
+  showForgotPassword(): void {
+    this.forgotPasswordMode = true;
+    this.clearForms();
+  }
 
-//   hideForgotPassword(): void {
-//     this.forgotPasswordMode.set(false);
-//     this.forgotPasswordForm.reset();
-//     this.clearMessages();
-//   }
+  hideForgotPassword(): void {
+    this.forgotPasswordMode = false;
+    this.forgotPasswordForm.reset();
+    this.clearForms();
+  }
 
-//   onSubmit(): void {
-//     if (this.authForm.invalid) return;
+  onSubmit(): void {
+    if (this.authForm.invalid) return;
+    this.loading.emit(true);
+    this.clearForms();
 
-//     this.isLoading.set(true);
-//     this.clearMessages();
+    const { email, password, displayName } = this.authForm.value;
 
-//     const { email, password, displayName } = this.authForm.value;
+    const authObservable = this.isLoginMode
+      ? this.authService.loginWithEmail(email, password)
+      : this.authService.registerWithEmail(email, password, displayName);
 
-//     const authObservable = this.isLoginMode()
-//       ? this.authService.loginWithEmail(email, password)
-//       : this.authService.registerWithEmail(email, password, displayName);
+    authObservable.subscribe({
+      next: (result) => {
+        this.loading.emit(false);
+        if (result.success) {
+          this.info.emit(result.message || 'Operación exitosa');
+          if (this.isLoginMode) {
+            this.loginSuccess.emit();
+          } else {
+            setTimeout(() => {
+              this.isLoginMode = true;
+              this.authForm.reset();
+              this.clearForms();
+            }, 2000);
+          }
+        } else {
+          this.error.emit(result.error || 'Error desconocido');
+        }
+      },
+      error: (error) => {
+        this.loading.emit(false);
+        this.error.emit('Error de conexión. Intenta de nuevo.');
+        console.error('Auth error:', error);
+      }
+    });
+  }
 
-//     authObservable.subscribe({
-//       next: (result) => {
-//         this.isLoading.set(false);
-        
-//         if (result.success) {
-//           this.successMessage.set(result.message || 'Operación exitosa');
-          
-//           if (this.isLoginMode()) {
-//             // Redirect after successful login
-//             setTimeout(() => {
-//               this.router.navigate(['/dashboard']);
-//             }, 1500);
-//           } else {
-//             // Show success message for registration
-//             setTimeout(() => {
-//               this.isLoginMode.set(true);
-//               this.authForm.reset();
-//               this.clearMessages();
-//             }, 3000);
-//           }
-//         } else {
-//           this.errorMessage.set(result.error || 'Error desconocido');
-//         }
-//       },
-//       error: (error) => {
-//         this.isLoading.set(false);
-//         this.errorMessage.set('Error de conexión. Intenta de nuevo.');
-//         console.error('Auth error:', error);
-//       }
-//     });
-//   }
+  onForgotPassword(): void {
+    if (this.forgotPasswordForm.invalid) return;
+    this.loading.emit(true);
+    this.clearForms();
 
-//   onForgotPassword(): void {
-//     if (this.forgotPasswordForm.invalid) return;
+    const { resetEmail } = this.forgotPasswordForm.value;
 
-//     this.isLoading.set(true);
-//     this.clearMessages();
+    this.authService.sendPasswordResetEmail(resetEmail).subscribe({
+      next: (result) => {
+        this.loading.emit(false);
+        if (result.success) {
+          this.info.emit(result.message || 'Email enviado');
+          setTimeout(() => {
+            this.hideForgotPassword();
+          }, 2000);
+        } else {
+          this.error.emit(result.error || 'Error al enviar email');
+        }
+      },
+      error: (error) => {
+        this.loading.emit(false);
+        this.error.emit('Error de conexión. Intenta de nuevo.');
+        console.error('Password reset error:', error);
+      }
+    });
+  }
 
-//     const { resetEmail } = this.forgotPasswordForm.value;
-
-//     this.authService.sendPasswordResetEmail(resetEmail).subscribe({
-//       next: (result) => {
-//         this.isLoading.set(false);
-        
-//         if (result.success) {
-//           this.successMessage.set(result.message || 'Email enviado');
-//           setTimeout(() => {
-//             this.hideForgotPassword();
-//           }, 3000);
-//         } else {
-//           this.errorMessage.set(result.error || 'Error al enviar email');
-//         }
-//       },
-//       error: (error) => {
-//         this.isLoading.set(false);
-//         this.errorMessage.set('Error de conexión. Intenta de nuevo.');
-//         console.error('Password reset error:', error);
-//       }
-//     });
-//   }
-
-//   private clearMessages(): void {
-//     this.errorMessage.set('');
-//     this.successMessage.set('');
-//   }
-// }
+  private clearForms(): void {
+    this.error.emit('');
+    this.info.emit('');
+  }
+}

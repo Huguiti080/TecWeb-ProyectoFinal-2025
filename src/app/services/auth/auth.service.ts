@@ -49,7 +49,7 @@ export class AuthService {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       const user = this.createAppUser(userCredential.user);
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/inicio']);
       return user;
     } catch (error) {
       console.error("Error en login:", error);
@@ -62,7 +62,7 @@ export class AuthService {
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       await updateProfile(userCredential.user, { displayName: fullName });
       const user = this.createAppUser(userCredential.user);
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/inicio']);
       return user;
     } catch (error) {
       console.error("Error en registro:", error);

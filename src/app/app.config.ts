@@ -1,12 +1,12 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 
 // Firebase
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getAuth, provideAuth, connectAuthEmulator } from '@angular/fire/auth';
+import { getFirestore, provideFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
 import { getAnalytics, provideAnalytics } from '@angular/fire/analytics';
 import { environment } from '../environments/environment';
 
@@ -14,13 +14,17 @@ import { environment } from '../environments/environment';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
+// Service Worker
+import { provideServiceWorker } from '@angular/service-worker';
+
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Angular básico
     provideRouter(routes),
     provideHttpClient(),
 
-    // FontAwesome (opcional)
+    // FontAwesome
     importProvidersFrom(FontAwesomeModule),
     {
       provide: FaIconLibrary,
@@ -31,14 +35,36 @@ export const appConfig: ApplicationConfig = {
       }
     },
 
-    // Firebase
+    // Firebase App
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideAnalytics(() => getAnalytics()), provideFirebaseApp(() => initializeApp({ projectId: "tecweb-proyectofinal-2025", appId: "1:891151412097:web:f01e4bdb0c7c14b73cd680", storageBucket: "tecweb-proyectofinal-2025.firebasestorage.app", apiKey: "AIzaSyD1GdEEnLBoChteMMl7VMvTbbhy2NfpWRg", authDomain: "tecweb-proyectofinal-2025.firebaseapp.com", messagingSenderId: "891151412097", measurementId: "G-E64BR5P5FZ" })), provideAuth(() => getAuth()), provideFirestore(() => getFirestore())
 
-    // Agrega más servicios Firebase según necesites:
-    // provideStorage(() => getStorage()),
-    // provideFunctions(() => getFunctions())
+    // Firebase Auth con emulador si está activo
+    provideAuth(() => {
+      const auth = getAuth();
+      if (environment.useEmulators) {
+        //connectAuthEmulator(auth, 'http://localhost:9099');
+      }
+      return auth;
+    }),
+
+    // Firebase Firestore con emulador si está activo
+    provideFirestore(() => {
+      const firestore = getFirestore();
+      if (environment.useEmulators) {
+        //connectFirestoreEmulator(firestore, 'localhost', 8080);
+      }
+      return firestore;
+    }),
+
+    // Firebase Analytics
+    provideAnalytics(() => getAnalytics()), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),
+
+  
   ]
 };

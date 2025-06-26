@@ -1,0 +1,13 @@
+<form [formGroup]="phoneForm" class="main-form">
+  <div *ngIf="!showVerificationCode">
+    <label for="phoneNumber">Número de teléfono</label>
+    <input type="tel" id="phoneNumber" formControlName="phoneNumber" placeholder="+52 1234567890">
+    <button type="button" (click)="sendSMSCode()" [disabled]="isLoading">Enviar código</button>
+    <div id="recaptcha-container"></div>
+  </div>
+  <div *ngIf="showVerificationCode">
+    <label for="verificationCode">Código de verificación</label>
+    <input type="text" id="verificationCode" formControlName="verificationCode" maxlength="6">
+    <button type="button" (click)="verifyPhoneCode()" [disabled]="isLoading">Verificar código</button>
+  </div>
+</form>

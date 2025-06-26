@@ -9,19 +9,20 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
-    path: 'Planes',
+    path: 'planes',
     loadComponent: () => import('./pages/planes/planes.component').then(m => m.PlanesComponent)
   },
   {
     path: 'clases',
     loadComponent: () => import('./pages/clases/clases.component').then(m => m.ClasesComponent)
   },
-  { 
-    path: 'servicios', 
+  {
+    path: 'servicios',
     loadComponent: () => import('./pages/servicios/servicios.component')
       .then(m => m.ServiciosComponent),
-    canActivate: [authGuard] // ← aquí
+    canActivate: [authGuard]
   },
+
   {
     path: 'productos',
     loadComponent: () => import('./pages/productos/productos.component').then(m => m.ProductosComponent)
