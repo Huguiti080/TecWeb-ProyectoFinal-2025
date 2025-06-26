@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-
 
 @Component({
   selector: 'app-servicios',
@@ -14,13 +14,25 @@ import Swal from 'sweetalert2';
 })
 export class ServiciosComponent {
   formulario: FormGroup;
+  origen: string | null = null; // <- Aquí se guarda el parámetro de la URL
 
-  constructor(private fb: FormBuilder, private firestore: Firestore) {
+  constructor(
+    private fb: FormBuilder,
+    private firestore: Firestore,
+    private route: ActivatedRoute // <- Inyectamos el servicio para leer parámetros de la URL
+  ) {
+    // Creamos el formulario reactivo
     this.formulario = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       correo: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       servicio: ['', Validators.required]
+    });
+
+    // Leemos el parámetro "origen" desde la URL
+    this.route.paramMap.subscribe(params => {
+      this.origen = params.get('origen');
+      console.log('Origen del formulario:', this.origen);
     });
   }
 
@@ -32,10 +44,9 @@ export class ServiciosComponent {
   async guardar() {
     if (this.formulario.valid) {
       const datos = this.formulario.value;
-      console.log(datos);
 
       try {
-        // Guardamos en Firebase Firestore
+        // Guardamos en la colección 'registros' de Firebase
         await addDoc(collection(this.firestore, 'registros'), datos);
 
         Swal.fire({

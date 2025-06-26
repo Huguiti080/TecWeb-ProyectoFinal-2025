@@ -11,8 +11,8 @@
 
 .login-card {
   width: 100%;
-  max-width: 420px;
-  padding: 40px;
+  max-width: 480px;
+  padding: 32px 32px 36px 32px;
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.98);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -106,6 +106,65 @@ label {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+/* Mensaje de advertencia de intentos */
+.attempts-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 13px;
+  border-left: 4px solid #ffc107;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  animation: pulse 2s infinite;
+}
+
+.attempts-warning i {
+  color: #ffc107;
+  font-size: 16px;
+}
+
+/* Mensaje de cuenta bloqueada */
+.account-blocked-warning {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 13px;
+  border-left: 4px solid #dc3545;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  animation: shake 0.5s ease-in-out;
+}
+
+.account-blocked-warning i {
+  color: #dc3545;
+  font-size: 16px;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 20%, 40%, 60%, 80% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
 }
 
 /* Botón de login */
@@ -357,6 +416,23 @@ label {
   animation: slideDown 0.3s ease;
 }
 
+.success-message.redirecting {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  color: #856404;
+  border-left-color: #ffc107;
+}
+
+.success-message.redirecting::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: auto;
+}
+
 @keyframes slideDown {
   from { transform: translateY(-10px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
@@ -577,5 +653,37 @@ label {
   }
   10%, 30%, 50%, 70%, 90% {
     transform: translateX(-5px);
+  }
+}
+
+/* Fila horizontal para contraseñas */
+.password-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.password-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajuste para que los mensajes de error no desborden */
+.password-col .validation-error {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Responsive: en móvil, columnas en vertical */
+@media (max-width: 600px) {
+  .login-card {
+    max-width: 98vw;
+    padding: 12px 4vw 18px 4vw;
+  }
+  .password-row {
+    flex-direction: column;
+    gap: 0;
   }
 }

@@ -10,7 +10,7 @@
         [ngClass]="{'active': activeTab === 'email'}"
         (click)="setActiveTab('email')">
         <i class="fas fa-envelope"></i>
-        Email
+        Cuenta
       </button>
       <button 
         type="button"
@@ -30,13 +30,8 @@
       </button>
     </div>
 
-    <!-- Mensajes de error y éxito -->
-    <div *ngIf="showError" class="error-message">
-      <i class="fas fa-exclamation-circle"></i>
-      {{ errorMessage }}
-    </div>
-
-    <div *ngIf="successMessage" class="success-message">
+    <!-- Mensajes de éxito -->
+    <div *ngIf="successMessage" class="success-message" [ngClass]="{'redirecting': isRedirecting}">
       <i class="fas fa-check-circle"></i>
       {{ successMessage }}
     </div>
@@ -47,37 +42,93 @@
     <div *ngIf="activeTab === 'email'" class="tab-content">
       <form [formGroup]="loginForm" (ngSubmit)="onEmailLogin()" class="main-form">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" formControlName="email" placeholder="Ingrese su email"
+          <label for="email">Cuenta o correo electrónico</label>
+          <input type="text" id="email" formControlName="email" placeholder="Ingrese su cuenta o correo"
             class="form-control"
+            (input)="onEmailChange()"
             [ngClass]="{'invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}">
           <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="validation-error">
             <i class="fas fa-exclamation-circle"></i>
-            Email es requerido y debe ser válido
+            Este campo es requerido y debe ser válido
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="password">Contraseña</label>
-          <div class="password-container">
-            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" 
-              placeholder="Ingrese su contraseña" class="form-control"
-              [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
-            <i class="fas fa-eye password-toggle" 
-               [ngClass]="{'fa-eye-slash': showPassword}" 
-               (click)="togglePasswordVisibility()"></i>
+        <div class="form-group password-row">
+          <div class="password-col">
+            <label for="password">Contraseña</label>
+            <div class="password-container">
+              <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" 
+                placeholder="Ingrese su contraseña" class="form-control"
+                [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+              <i class="fas fa-eye password-toggle" 
+                 [ngClass]="{'fa-eye-slash': showPassword}" 
+                 (click)="togglePasswordVisibility()"></i>
+            </div>
+            <!-- Mensajes de validación específicos para contraseña -->
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="validation-error">
+              <i class="fas fa-exclamation-circle"></i>
+              <span *ngIf="loginForm.get('password')?.errors?.['required']">
+                Contraseña es requerida
+              </span>
+              <span *ngIf="loginForm.get('password')?.errors?.['passwordTooShort']">
+                La contraseña debe tener al menos 6 caracteres (actual: {{ loginForm.get('password')?.errors?.['passwordTooShort']?.actualLength }})
+              </span>
+              <span *ngIf="loginForm.get('password')?.errors?.['passwordInvalidChars']">
+                Solo se permiten letras, números y guión bajo (_)
+              </span>
+              <span *ngIf="loginForm.get('password')?.errors?.['passwordNoUpperCase']">
+                La contraseña debe contener al menos una letra mayúscula
+              </span>
+              <span *ngIf="loginForm.get('password')?.errors?.['passwordNoDigit']">
+                La contraseña debe contener al menos un número
+              </span>
+            </div>
+            <!-- Indicador de fortaleza de contraseña -->
+            <div *ngIf="loginForm.get('password')?.value && loginForm.get('password')?.touched" class="password-strength">
+              <div class="strength-bar">
+                <div class="strength-fill" [ngClass]="getPasswordStrengthClass()"></div>
+              </div>
+              <span class="strength-text">{{ getPasswordStrengthText() }}</span>
+            </div>
           </div>
-          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="validation-error">
-            <i class="fas fa-exclamation-circle"></i>
-            Contraseña es requerida (mínimo 6 caracteres)
+          <div class="password-col">
+            <label for="password-confirm">Confirmar contraseña</label>
+            <div class="password-container">
+              <input [type]="showConfirmPassword ? 'text' : 'password'" id="password-confirm" formControlName="passwordConfirm" 
+                placeholder="Confirme su contraseña" class="form-control"
+                [ngClass]="{'invalid': loginForm.get('passwordConfirm')?.invalid && loginForm.get('passwordConfirm')?.touched}">
+              <i class="fas fa-eye password-toggle" 
+                 [ngClass]="{'fa-eye-slash': showConfirmPassword}" 
+                 (click)="toggleConfirmPasswordVisibility()"></i>
+            </div>
+            <div *ngIf="loginForm.get('passwordConfirm')?.invalid && loginForm.get('passwordConfirm')?.touched" class="validation-error">
+              <i class="fas fa-exclamation-circle"></i>
+              Confirmación de contraseña es requerida
+            </div>
+            <div *ngIf="loginForm.hasError('passwordMismatch') && loginForm.get('passwordConfirm')?.touched" class="validation-error">
+              <i class="fas fa-exclamation-circle"></i>
+              Las contraseñas no coinciden
+            </div>
           </div>
+        </div>
+
+        <!-- Mensaje de intentos restantes -->
+        <div *ngIf="currentFailedAttempts > 0 && currentFailedAttempts < maxAttempts" class="attempts-warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Intento {{ currentFailedAttempts }} de {{ maxAttempts }}. La cuenta será bloqueada después de {{ maxAttempts }} intentos fallidos.</span>
+        </div>
+
+        <!-- Mensaje de cuenta bloqueada -->
+        <div *ngIf="currentFailedAttempts >= maxAttempts" class="account-blocked-warning">
+          <i class="fas fa-lock"></i>
+          <span>Tu cuenta está bloqueada por múltiples intentos fallidos. Restablece tu contraseña para desbloquearla.</span>
         </div>
 
         <div class="forgot-password">
           <a (click)="onForgotPassword()">¿Olvidaste tu contraseña?</a>
         </div>
 
-        <button type="submit" class="btn-login" [disabled]="loginForm.invalid || loading">
+        <button type="submit" class="btn-login" [disabled]="loginForm.invalid || loading || currentFailedAttempts >= maxAttempts">
           <span *ngIf="!loading">INGRESAR</span>
           <span *ngIf="loading" class="spinner"></span>
         </button>
@@ -105,6 +156,8 @@
               Número de teléfono inválido
             </div>
           </div>
+
+          <div id="recaptcha-container"></div>
 
           <button type="button" class="btn-login" 
             (click)="sendSMSCode()" 
@@ -173,8 +226,5 @@
     <div class="signup-link">
       ¿No tienes cuenta? <a routerLink="/registro">Regístrate</a>
     </div>
-
-    <!-- reCAPTCHA container (invisible) -->
-    <div id="recaptcha-container"></div>
   </div>
 </div>

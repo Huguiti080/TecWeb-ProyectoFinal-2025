@@ -5,6 +5,14 @@
         <div class="col-md-8 col-lg-6">
           <div class="card bg-dark text-warning shadow-lg border-warning">
             <div class="card-body">
+
+              <!-- parámetro -->
+              @if (origen) {
+                <p class="text-center text-light">
+                  Este formulario fue accedido desde: <strong class="text-warning">{{ origen }}</strong>
+                </p>
+              }
+
               <h3 class="card-title text-center mb-4">Regístrate al Gimnasio</h3>
 
               <form [formGroup]="formulario" (ngSubmit)="guardar()">
@@ -100,6 +108,7 @@
                   Enviar
                 </button>
               </form>
+
             </div>
           </div>
         </div>

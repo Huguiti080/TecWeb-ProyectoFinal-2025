@@ -9,7 +9,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
-    path: 'Planes',
+    path: 'planes',
     loadComponent: () => import('./pages/planes/planes.component').then(m => m.PlanesComponent)
   },
   {
@@ -17,14 +17,18 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/clases/clases.component').then(m => m.ClasesComponent)
   },
   {
+<<<<<<< HEAD
     path: 'qrs',
     loadComponent: () => import('./pages/qrs/qrs.component').then(m => m.QrsComponent)
   },
   { 
     path: 'servicios', 
+=======
+    path: 'servicios/:origen',
+>>>>>>> 4c3b23fcc839593edeb0f0d9a6019a4d61c139e9
     loadComponent: () => import('./pages/servicios/servicios.component')
       .then(m => m.ServiciosComponent),
-    canActivate: [authGuard] // ← aquí
+    canActivate: [authGuard]
   },
   {
     path: 'productos',
@@ -51,6 +55,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/contactoregistro/contactoregistro.component')
       .then(m => m.ContactoregistroComponent),
     canActivate: [adminGuard] // ← solo admin
+  },
+  {
+    path: 'servicios',
+    loadComponent: () => import('./pages/servicios/servicios.component')
+      .then(m => m.ServiciosComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'admin',
