@@ -37,7 +37,6 @@ export class HeaderComponent {
         break;
     }
   }
-<<<<<<< HEAD
   menuVisible = false;
 toggleMenu() {
   this.menuVisible = !this.menuVisible;
@@ -82,7 +81,6 @@ changeFont(event: Event) {
   document.body.style.fontFamily = select.value;
 }
 
-=======
 
   usuariosConectados = signal(this.getRandomUsuarios());
 
@@ -95,5 +93,4 @@ changeFont(event: Event) {
   getRandomUsuarios(): number {
     return Math.floor(Math.random() * 51) + 30; // 30 a 80
   }
->>>>>>> 4c3b23fcc839593edeb0f0d9a6019a4d61c139e9
 }
