@@ -17,15 +17,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/clases/clases.component').then(m => m.ClasesComponent)
   },
   {
-<<<<<<< HEAD
     path: 'qrs',
     loadComponent: () => import('./pages/qrs/qrs.component').then(m => m.QrsComponent)
   },
   { 
-    path: 'servicios', 
-=======
-    path: 'servicios/:origen',
->>>>>>> 4c3b23fcc839593edeb0f0d9a6019a4d61c139e9
+    path: 'servicios/:origen', 
     loadComponent: () => import('./pages/servicios/servicios.component')
       .then(m => m.ServiciosComponent),
     canActivate: [authGuard]
@@ -45,7 +41,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent)
   },
   {
-    path: 'registro',
+    path: 'registro:',
     loadComponent: () => import('./pages/registro/registro.component')
       .then(m => m.RegistroComponent),
     canActivate: [adminGuard] // ← solo admin
