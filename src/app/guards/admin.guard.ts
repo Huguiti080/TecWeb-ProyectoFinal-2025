@@ -20,7 +20,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
       return from(getDoc(ref)).pipe(
         map(docSnap => {
           const data = docSnap.data();
-          if (data?.['role'] === 'admin') {
+          if (data?.['rol'] === 'admin') {
             return true;
           } else {
             router.navigate(['/']);
