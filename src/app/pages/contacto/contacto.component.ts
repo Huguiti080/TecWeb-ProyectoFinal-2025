@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { EmailService } from '../../services/email/email.service';
 import { UrgenciaColorPipe } from '../../pipes/urgencia-color.pipe';
+import { contienePalabrasOfensivas } from '../../validators/no-ofensivo.validator';
 
 
 import Swal from 'sweetalert2';
@@ -25,6 +26,8 @@ export class ContactoComponent {
     urgencia: '',
     fecha: ''
   };
+
+  
 
   motivos: string[] = [
     'Consulta general',
@@ -52,6 +55,17 @@ constructor(private firestore: Firestore, private emailService: EmailService) {}
 
  async enviarFormulario(form: NgForm) {
   if (form.valid && !this.esFechaAnterior()) {
+
+  if (contienePalabrasOfensivas(this.contacto.mensaje)) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Mensaje inválido',
+      text: 'Tu mensaje contiene palabras ofensivas.',
+      confirmButtonColor: '#f0ad4e'
+    });
+    return;
+  }
+
     try {
       const contactoConFecha = {
         ...this.contacto,
