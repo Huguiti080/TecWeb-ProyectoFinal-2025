@@ -9,7 +9,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
-    path: 'Planes',
+    path: 'planes',
     loadComponent: () => import('./pages/planes/planes.component').then(m => m.PlanesComponent)
   },
   {
@@ -52,11 +52,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadComponent: () => import('./components/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
-    canActivate: [adminGuard] // Protege esta ruta solo para admin
+    canActivate: [authGuard] // Protege esta ruta
   },
-  {
-    path: 'no-permission',
-    loadComponent: () => import('./pages/no-permission/no-permission.component').then(m => m.NoPermissionComponent)
-  },
+ 
   { path: '**', redirectTo: 'inicio' } // Ruta comodín para 404
 ];
